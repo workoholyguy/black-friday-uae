@@ -51,7 +51,8 @@
   },
   "navigation": {
     "categories": "Categories",
-    "about": "About"
+    "about": "About",
+    "products": "Products"
   },
   "contact": {
     "heading": "Contact us",
@@ -132,5 +133,51 @@
     "value_2_copy": "We keep the best deals easy to find when it matters most.",
     "value_3_title": "Support",
     "value_3_copy": "Need help choosing? We guide you quickly and clearly."
+  },
+  "products": {
+    "add_to_cart": "Add to cart",
+    "sale": "Sale",
+    "sold_out": "Sold out",
+    "quantity": "Quantity",
+    "variant": "Variant",
+    "sku": "SKU",
+    "in_stock": "In stock",
+    "out_of_stock": "Out of stock",
+    "description": "Description",
+    "shipping": "Shipping",
+    "returns": "Returns",
+    "details": "Details",
+    "secure_checkout": "Secure checkout"
+  },
+  "products_page": {
+    "title": "Products",
+    "subtitle": "Browse our collection and find the best deals available right now.",
+    "empty": "No products found yet.",
+    "filters": {
+      "title": "Search & filter",
+      "search": "Search",
+      "search_placeholder": "Search products or brands",
+      "categories": "Categories",
+      "categories_hint": "Choose category collections in the theme editor to show filters here.",
+      "refine": "Refine",
+      "in_stock": "In stock only",
+      "on_sale": "On sale only",
+      "price": "Price",
+      "min_price": "Min",
+      "max_price": "Max",
+      "price_hint": "Enter AED amounts (example: 50 to 200).",
+      "clear": "Clear",
+      "minimize": "Hide",
+      "maximize": "Filters"
+    },
+    "categories": {
+      "clothing_accessories": "Clothing & accessories",
+      "health_beauty": "Health & beauty",
+      "shoes_footwear": "Shoes & footwear",
+      "electronics": "Electronics",
+      "household": "Household",
+      "luggage_travel_bags": "Luggage & travel bags",
+      "kids_toddlers": "Kids & toddlers"
+    }
   }
 }

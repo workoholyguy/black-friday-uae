@@ -44,12 +44,16 @@
     <nav class="header__nav" aria-label="Main">
       {% liquid
         assign about_url = '/pages/about'
+        assign products_url = routes.all_products_collection_url
         if section.settings.about_page != blank
           assign about_url = section.settings.about_page.url
         else
           if pages['about'] != blank
             assign about_url = pages['about'].url
           endif
+        endif
+        if pages['products'] != blank
+          assign products_url = pages['products'].url
         endif
       %}
       {% if section.settings.secondary_menu != blank %}
@@ -85,11 +89,13 @@
             </details>
           {% endif %}
         {% endfor %}
+        <a href="{{ products_url }}">{{ 'navigation.products' | t }}</a>
         {% if has_about_link == false %}
           <a href="{{ about_url }}">{{ 'navigation.about' | t }}</a>
         {% endif %}
       {% else %}
         <a href="{{ section.settings.secondary_home_url | default: '/' }}">{{ section.settings.secondary_home_label | default: 'Home' }}</a>
+        <a href="{{ products_url }}">{{ 'navigation.products' | t }}</a>
         {% if section.settings.show_categories and section.settings.categories != blank %}
           <details class="nav__dropdown">
             <summary class="nav__trigger">{{ section.settings.secondary_categories_label | default: 'Categories' }}</summary>

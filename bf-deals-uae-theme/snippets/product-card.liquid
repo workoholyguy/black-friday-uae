@@ -1,0 +1,175 @@
+{% doc %}
+  Renders a product card (image, title, optional vendor, price, and badges).
+
+  @param {product} product - The product to render
+  @param {boolean} [show_vendor] - Show product vendor
+  @param {boolean} [show_price] - Show product price
+  @param {string} [class] - Optional extra class for the card wrapper
+
+  @example
+  {% render 'product-card', product: product, show_vendor: true, show_price: true %}
+{% enddoc %}
+
+{% liquid
+  assign show_vendor = show_vendor | default: false
+  assign show_price = show_price | default: true
+  assign variant = product.selected_or_first_available_variant
+
+  assign on_sale = false
+  if variant.compare_at_price > variant.price
+    assign on_sale = true
+  endif
+%}
+
+<article class="product-card {{ class }}">
+  <a class="product-card__media" href="{{ product.url }}" aria-label="{{ product.title | escape }}">
+    {% if product.featured_image %}
+      {% render 'image',
+        class: 'product-card__image',
+        image: product.featured_image,
+        width: 900,
+        height: 900,
+        crop: 'center'
+      %}
+    {% else %}
+      {{ 'product-1' | placeholder_svg_tag: 'product-card__placeholder' }}
+    {% endif %}
+
+    {% if product.available == false %}
+      <span class="product-card__badge product-card__badge--soldout">
+        {{ 'products.sold_out' | t }}
+      </span>
+    {% else %}
+      {% if on_sale %}
+        <span class="product-card__badge product-card__badge--sale">
+          {{ 'products.sale' | t }}
+        </span>
+      {% endif %}
+    {% endif %}
+  </a>
+
+  <div class="product-card__content">
+    {% if show_vendor and product.vendor != blank %}
+      <p class="product-card__vendor">{{ product.vendor | escape }}</p>
+    {% endif %}
+
+    <h3 class="product-card__title">
+      <a href="{{ product.url }}">{{ product.title | escape }}</a>
+    </h3>
+
+    {% if show_price %}
+      <div class="product-card__price">
+        <span class="product-card__price-current">{{ variant.price | money }}</span>
+        {% if on_sale %}
+          <s class="product-card__price-compare">{{ variant.compare_at_price | money }}</s>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</article>
+
+{% stylesheet %}
+  .product-card {
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid red;
+    background: color-mix(in srgb, var(--color-background) 96%, var(--color-foreground) 4%);
+    box-shadow: 0 14px 30px color-mix(in srgb, var(--color-foreground) 10%, transparent);
+    transition: transform 160ms ease;
+  }
+
+  .product-card:hover {
+    transform: translateY(-2px);
+  }
+
+  .product-card__media {
+    position: relative;
+    display: block;
+    background: color-mix(in srgb, var(--color-foreground) 6%, transparent);
+  }
+
+  .product-card__image > img {
+    width: 100%;
+    height: auto;
+  }
+
+  .product-card__placeholder {
+    width: 100%;
+    height: auto;
+  }
+
+  .product-card__badge {
+    position: absolute;
+    inset-block-start: 12px;
+    inset-inline-start: 12px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    backdrop-filter: blur(10px);
+    background: color-mix(in srgb, var(--color-background) 78%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-foreground) 14%, transparent);
+  }
+
+  .product-card__badge--sale {
+    color: color-mix(in srgb, #f04438 80%, var(--color-foreground));
+  }
+
+  .product-card__badge--soldout {
+    opacity: 0.85;
+  }
+
+  .product-card__content {
+    padding: 12px 14px 14px 14px;
+    display: grid;
+    gap: 6px;
+  }
+
+  .product-card__vendor {
+    font-size: 0.85rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    opacity: 0.75;
+  }
+
+  .product-card__title {
+    font-size: 1rem;
+    line-height: 1.25;
+  }
+
+  .product-card__title a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .product-card__title a:hover {
+    color: var(--color-link);
+  }
+
+  .product-card__price {
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+  }
+
+  .product-card__price-current {
+    font-weight: 800;
+    letter-spacing: -0.01em;
+  }
+
+  .product-card__price-compare {
+    opacity: 0.65;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .product-card {
+      transition: none;
+    }
+
+    .product-card:hover {
+      transform: none;
+    }
+  }
+{% endstylesheet %}
+
+
