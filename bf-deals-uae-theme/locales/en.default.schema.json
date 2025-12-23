@@ -31,7 +31,8 @@
     "sidebar": "Sidebar",
     "text": "Text",
     "theme": "Theme",
-    "typography": "Typography"
+    "typography": "Typography",
+    "about": "About"
   },
   "labels": {
     "alignment": "Alignment",
@@ -47,7 +48,33 @@
     "page_width": "Page width",
     "show_payment_icons": "Show payment icons",
     "text_style": "Text style",
-    "text": "Text"
+    "text": "Text",
+    "about": "About",
+    "body": "Body",
+    "button_label": "Button label",
+    "button_link": "Button link",
+    "card_background": "Card background",
+    "eyebrow": "Eyebrow",
+    "heading": "Heading",
+    "image": "Image",
+    "about_page": "About page",
+    "show_cta": "Show call to action",
+    "show_stats": "Show stats",
+    "show_values": "Show values",
+    "stat_1_label": "Stat 1 label",
+    "stat_1_value": "Stat 1 value",
+    "stat_2_label": "Stat 2 label",
+    "stat_2_value": "Stat 2 value",
+    "stat_3_label": "Stat 3 label",
+    "stat_3_value": "Stat 3 value",
+    "subheading": "Subheading",
+    "use_page_content": "Use page content",
+    "value_1_copy": "Value 1 copy",
+    "value_1_title": "Value 1 title",
+    "value_2_copy": "Value 2 copy",
+    "value_2_title": "Value 2 title",
+    "value_3_copy": "Value 3 copy",
+    "value_3_title": "Value 3 title"
   },
   "options": {
     "alignment": {
@@ -71,6 +98,6 @@
       "title": "Title",
       "subtitle": "Subtitle",
       "normal": "Normal text"
-    },
+    }
   }
 }

@@ -69,6 +69,50 @@
         "label": "t:labels.foreground"
       },
       {
+        "type": "header",
+        "content": "Brand palette"
+      },
+      {
+        "type": "color",
+        "id": "primary_color",
+        "default": "#D81313",
+        "label": "Primary (Red)"
+      },
+      {
+        "type": "color",
+        "id": "secondary_color",
+        "default": "#000000",
+        "label": "Secondary (Black)"
+      },
+      {
+        "type": "color",
+        "id": "accent_color",
+        "default": "#FFFFFF",
+        "label": "Accent (White)"
+      },
+      {
+        "type": "header",
+        "content": "Header & Footer"
+      },
+      {
+        "type": "color",
+        "id": "header_background_color",
+        "default": "#000000",
+        "label": "Header background"
+      },
+      {
+        "type": "color",
+        "id": "footer_background_color",
+        "default": "#000000",
+        "label": "Footer background"
+      },
+      {
+        "type": "color",
+        "id": "link_color",
+        "default": "#D81313",
+        "label": "Link color"
+      },
+      {
         "type": "range",
         "id": "input_corner_radius",
         "min": 0,

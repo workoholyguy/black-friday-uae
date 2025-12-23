@@ -1,0 +1,173 @@
+{% doc %}
+  Renders a full-width hero with text and a Lottie animation.
+
+  Intended for `assets/shoping_hero.json` or any uploaded Lottie file.
+{% enddoc %}
+
+<div class="hero-lottie full-width">
+  <div class="hero-lottie__inner {{ section.settings.layout | default: 'hero-lottie--split' }}">
+    <div class="hero-lottie__text">
+      {% if section.settings.heading != blank %}
+        <h1 class="hero-lottie__heading">{{ section.settings.heading }}</h1>
+      {% endif %}
+      {% if section.settings.subheading != blank %}
+        <p class="hero-lottie__subheading">{{ section.settings.subheading }}</p>
+      {% endif %}
+      {% if section.settings.show_buttons %}
+        {% if section.settings.primary_label != blank %}
+          <a class="hero-lottie__btn hero-lottie__btn--primary" href="{{ section.settings.primary_link | default: routes.root_url }}">
+            {{ section.settings.primary_label }}
+          </a>
+        {% endif %}
+        {% if section.settings.secondary_label != blank %}
+          <a class="hero-lottie__btn hero-lottie__btn--secondary" href="{{ section.settings.secondary_link | default: routes.collections_url }}">
+            {{ section.settings.secondary_label }}
+          </a>
+        {% endif %}
+      {% endif %}
+    </div>
+
+    <div class="hero-lottie__anim" style="--lottie-scale: {{ section.settings.animation_scale | default: 1 }};">
+      <div id="lottie-{{ section.id }}" aria-hidden="true"></div>
+    </div>
+  </div>
+  </div>
+
+<script>
+  (function() {
+    var init = function() {
+      var el = document.getElementById('lottie-{{ section.id }}');
+      if (!el || !window.lottie) return;
+      var anim = lottie.loadAnimation({
+        container: el,
+        renderer: '{{ section.settings.renderer | default: "svg" }}',
+        loop: {{ section.settings.loop | default: true | json }},
+        autoplay: {{ section.settings.autoplay | default: true | json }},
+        path: "{{ section.settings.lottie_asset_name | default: 'shoping_hero.json' | asset_url }}"
+      });
+      try { anim.setSpeed({{ section.settings.animation_speed | default: 1 }}); } catch(e) {}
+    };
+
+    if (!window.lottie) {
+      var s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js';
+      s.async = true;
+      s.onload = init;
+      document.head.appendChild(s);
+    } else {
+      init();
+    }
+  })();
+</script>
+
+{% stylesheet %}
+  .hero-lottie {
+    background: var(--color-background);
+    color: var(--color-foreground);
+    position: relative;
+  }
+  .hero-lottie__inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(1rem, 3vw, 2rem);
+    align-items: center;
+    padding: clamp(1.5rem, 4vw, 3rem) var(--page-margin);
+  }
+  .hero-lottie__inner.hero-lottie--center {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  .hero-lottie__text {
+    display: grid;
+    gap: .75rem;
+  }
+  .hero-lottie__heading {
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    line-height: 1.1;
+    color: var(--color-accent);
+  }
+  .hero-lottie__subheading {
+    font-size: clamp(1rem, 2.2vw, 1.25rem);
+    opacity: .9;
+    color: var(--color-accent);
+  }
+  .hero-lottie__btn {
+    display: inline-block;
+    margin-top: .5rem;
+    padding: .6rem 1rem;
+    border-radius: 999px;
+    text-decoration: none;
+  }
+  .hero-lottie__btn--primary {
+    background: var(--color-primary);
+    color: var(--color-accent);
+  }
+  .hero-lottie__btn--secondary {
+    background: transparent;
+    color: var(--color-accent);
+    border: 1px solid color-mix(in oklab, var(--color-accent) 35%, transparent);
+  }
+  .hero-lottie__anim {
+    display: grid;
+    place-items: center;
+  }
+  .hero-lottie__anim > div {
+    width: min(100%, 640px);
+    height: clamp(220px, 40vw, 420px);
+    transform: scale(var(--lottie-scale, 1));
+    transform-origin: center;
+  }
+
+  @media (max-width: 900px) {
+    .hero-lottie__inner {
+      grid-template-columns: 1fr;
+      text-align: center;
+    }
+    .hero-lottie__btn {
+      justify-self: center;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Lottie hero",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading" },
+    { "type": "text", "id": "subheading", "label": "Subheading" },
+    { "type": "checkbox", "id": "show_buttons", "label": "Show buttons", "default": true },
+    { "type": "text", "id": "primary_label", "label": "Primary button label" },
+    { "type": "url", "id": "primary_link", "label": "Primary button link" },
+    { "type": "text", "id": "secondary_label", "label": "Secondary button label" },
+    { "type": "url", "id": "secondary_link", "label": "Secondary button link" },
+
+    { "type": "header", "content": "Animation" },
+    { "type": "text", "id": "lottie_asset_name", "label": "Lottie asset filename in assets/", "default": "shoping_hero.json" },
+    {
+      "type": "select",
+      "id": "renderer",
+      "label": "Renderer",
+      "options": [
+        { "value": "svg", "label": "SVG" },
+        { "value": "canvas", "label": "Canvas" }
+      ],
+      "default": "svg"
+    },
+    { "type": "checkbox", "id": "autoplay", "label": "Autoplay", "default": true },
+    { "type": "checkbox", "id": "loop", "label": "Loop", "default": true },
+    { "type": "range", "id": "animation_speed", "label": "Speed", "min": 0.2, "max": 2, "step": 0.1, "default": 1 },
+    { "type": "range", "id": "animation_scale", "label": "Zoom (scale)", "min": 0.5, "max": 2, "step": 0.1, "default": 1 },
+    { "type": "select", "id": "layout", "label": "Layout", "options": [
+        { "value": "hero-lottie--split", "label": "Text left, animation right" },
+        { "value": "hero-lottie--center", "label": "Centered (stacked)" }
+      ],
+      "default": "hero-lottie--split"
+    }
+  ],
+  "presets": [
+    { "name": "Lottie hero" }
+  ]
+}
+{% endschema %}
+
+

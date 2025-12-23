@@ -13,6 +13,12 @@
     --page-margin: {{ settings.min_page_margin }}px;
     --color-background: {{ settings.background_color }};
     --color-foreground: {{ settings.foreground_color }};
+    --color-primary: {{ settings.primary_color | default: '#D81313' }};
+    --color-secondary: {{ settings.secondary_color | default: '#000000' }};
+    --color-accent: {{ settings.accent_color | default: '#FFFFFF' }};
+    --color-link: {{ settings.link_color | default: settings.primary_color }};
+    --color-header-bg: {{ settings.header_background_color | default: settings.secondary_color }};
+    --color-footer-bg: {{ settings.footer_background_color | default: settings.secondary_color }};
     --style-border-radius-inputs: {{ settings.input_corner_radius }}px;
   }
 {% endstyle %}

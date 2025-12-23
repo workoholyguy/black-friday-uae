@@ -1,0 +1,71 @@
+{% doc %}
+  Refund policy static content section.
+{% enddoc %}
+
+<section class="refund-policy">
+  <div class="refund-policy__inner">
+    {% liquid
+      assign policy_title = blank
+      assign policy_body = blank
+
+      if shop.refund_policy != blank
+        assign policy_title = shop.refund_policy.title
+        assign policy_body = shop.refund_policy.body
+      elsif page != blank
+        assign policy_title = page.title
+        assign policy_body = page.content
+      endif
+    %}
+
+    {% if policy_body != blank %}
+      {% if policy_title != blank %}
+        <h1>{{ policy_title | escape }}</h1>
+      {% endif %}
+      <div class="refund-policy__content rte">
+        {{ policy_body }}
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+{% stylesheet %}
+  .refund-policy__inner {
+    display: grid;
+    grid-template-columns: var(--content-grid);
+    padding-block: clamp(1.5rem, 4vw, 3rem);
+  }
+  .refund-policy__inner > * {
+    grid-column: 2;
+  }
+  .refund-policy h1 {
+    font-size: clamp(1.6rem, 4vw, 2.2rem);
+    margin: 0 0 .75rem 0;
+    color: var(--color-foreground);
+  }
+  .refund-policy h2 {
+    margin-top: 1.25rem;
+    font-size: 1.2rem;
+    color: var(--color-foreground);
+  }
+  .refund-policy h3 {
+    margin-top: 1rem;
+    font-size: 1.05rem;
+    color: var(--color-foreground);
+  }
+  .refund-policy p, .refund-policy li {
+    color: var(--color-foreground);
+  }
+  .refund-policy a { color: var(--color-link); }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Refund policy",
+  "settings": [],
+  "presets": [
+    { "name": "Refund policy" }
+  ]
+}
+{% endschema %}
+
+

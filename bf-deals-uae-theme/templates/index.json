@@ -9,12 +9,32 @@
  */
 {
   "sections": {
+    "hero": {
+      "type": "hero-lottie",
+      "settings": {
+        "heading": "Black Friday Deals UAE",
+        "subheading": "Amazon returns • Big brands • Small prices",
+        "show_buttons": false,
+        "primary_label": "",
+        "primary_link": "",
+        "secondary_label": "Browse categories",
+        "secondary_link": "/collections",
+        "lottie_asset_name": "shoping_hero.json",
+        "renderer": "svg",
+        "autoplay": true,
+        "loop": true,
+        "animation_speed": 1,
+        "animation_scale": 1.5,
+        "layout": "hero-lottie--center"
+      }
+    },
     "main": {
       "type": "hello-world",
       "settings": {}
     }
   },
   "order": [
+    "hero",
     "main"
   ]
 }

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="{{ request.locale.iso_code }}">
+<html lang="{{ request.locale.iso_code }}" dir="{% if request.locale.iso_code contains 'ar' %}rtl{% else %}ltr{% endif %}">
   <head>
     {% # Inlined CSS Variables %}
     {% render 'css-variables' %}
@@ -26,7 +26,9 @@
     {{ content_for_header }}
   </head>
 
-  <body>
+  <body
+    class="template-{{ template.name | handleize }} template-{{ request.page_type | handleize }}{% if template.suffix != blank %} template-{{ template.name | handleize }}-{{ template.suffix | handleize }} template-suffix-{{ template.suffix | handleize }}{% endif %}"
+  >
     {% sections 'header-group' %}
 
     {{ content_for_layout }}

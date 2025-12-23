@@ -1,39 +1,165 @@
-<footer>
-  <div class="footer__copyright">
-    &copy;
-    {{ 'now' | date: '%Y' }}
-    {{ shop.name | link_to: routes.root_url }}, {{ powered_by_link }}
-  </div>
+<footer class="site-footer full-width">
+  <div class="footer__top">
+    <div class="footer__brand">
+      <a class="footer__home" href="{{ routes.root_url }}">{{ shop.name }}</a>
+      <p class="footer__tagline">Black Friday Deals · Amazon returns in UAE</p>
+    </div>
 
-  <div class="footer__links">
-    {% for link in section.settings.menu.links %}
-      {{ link.title | link_to: link.url }}
-    {% endfor %}
-  </div>
-
-  <div class="footer__payment">
-    {% if section.settings.show_payment_icons %}
-      {% for type in shop.enabled_payment_types %}
-        {{ type | payment_type_svg_tag }}
-      {% endfor %}
+    {% if section.settings.show_contact %}
+      <div class="footer__contact">
+        {% if section.settings.contact_heading != blank %}
+          <h4 class="footer__contact-heading">{{ section.settings.contact_heading }}</h4>
+        {% endif %}
+        <address class="footer__address">
+          {% if section.settings.contact_address != blank %}
+            <p class="footer__address-line">{{ section.settings.contact_address | newline_to_br }}</p>
+          {% endif %}
+          {% if section.settings.contact_phone != blank %}
+            <p class="footer__address-line">
+              <a href="tel:{{ section.settings.contact_phone | replace: ' ', '' }}">{{ section.settings.contact_phone }}</a>
+            </p>
+          {% endif %}
+          {% if section.settings.contact_email != blank %}
+            <p class="footer__address-line">
+              <a href="mailto:{{ section.settings.contact_email }}">{{ section.settings.contact_email }}</a>
+            </p>
+          {% endif %}
+          {% if section.settings.contact_hours != blank %}
+            <p class="footer__address-line">{{ section.settings.contact_hours }}</p>
+          {% endif %}
+        </address>
+      </div>
     {% endif %}
+
+    <div class="footer__utility">
+      <div class="footer__social">
+        {% if section.settings.facebook_url != blank %}
+          <a href="{{ section.settings.facebook_url }}" target="_blank" rel="noopener" aria-label="Facebook">
+            {{ 'icon-facebook.svg' | inline_asset_content }}
+          </a>
+        {% endif %}
+        {% if section.settings.instagram_url != blank %}
+          <a href="{{ section.settings.instagram_url }}" target="_blank" rel="noopener" aria-label="Instagram">
+            {{ 'icon-instagram.svg' | inline_asset_content }}
+          </a>
+        {% endif %}
+        {% if section.settings.tiktok_url != blank %}
+          <a href="{{ section.settings.tiktok_url }}" target="_blank" rel="noopener" aria-label="TikTok">
+            {{ 'icon-tiktok.svg' | inline_asset_content }}
+          </a>
+        {% endif %}
+      </div>
+      {% if section.settings.show_utility_links %}
+        <div class="footer__links">
+          {% if section.settings.utility_heading != blank %}
+            <h4 class="footer__links-heading">{{ section.settings.utility_heading }}</h4>
+          {% endif %}
+          <ul class="footer__links-list">
+            <li><a href="{{ routes.search_url }}">Search</a></li>
+            {% if shop.privacy_policy %}<li><a href="{{ shop.privacy_policy.url }}">Privacy Policy</a></li>{% endif %}
+            {% if shop.refund_policy %}
+              <li><a href="{{ shop.refund_policy.url }}">Refund Policy</a></li>
+            {% elsif section.settings.refund_policy_url != blank %}
+              <li><a href="{{ section.settings.refund_policy_url }}">Refund Policy</a></li>
+            {% endif %}
+            {% if shop.shipping_policy %}<li><a href="{{ shop.shipping_policy.url }}">Shipping Policy</a></li>{% endif %}
+            {% unless shop.shipping_policy %}
+              {% if section.settings.shipping_policy_url != blank %}
+                <li><a href="{{ section.settings.shipping_policy_url }}">Shipping Policy</a></li>
+              {% endif %}
+            {% endunless %}
+            {% if shop.terms_of_service %}<li><a href="{{ shop.terms_of_service.url }}">Terms of Service</a></li>{% endif %}
+          </ul>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="footer__bottom">
+    <div class="footer__copyright">
+      &copy; {{ 'now' | date: '%Y' }} {{ shop.name | link_to: routes.root_url }}, {{ powered_by_link }}
+    </div>
+    <div class="footer__payment">
+      {% if section.settings.show_payment_icons %}
+        {% for type in shop.enabled_payment_types %}
+          {{ type | payment_type_svg_tag }}
+        {% endfor %}
+      {% endif %}
+    </div>
   </div>
 </footer>
 
 {% stylesheet %}
-  footer {
+  .site-footer {
+    background: var(--color-footer-bg);
+    color: var(--color-accent);
+    margin-top: 2rem;
+    padding-block: 2rem;
+    border-block-start: 2px solid var(--color-primary);
+  }
+  .site-footer a {
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+  .footer__top {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    align-items: center;
+    gap: 1rem;
+    padding-inline: var(--page-margin);
+    margin-bottom: 1rem;
+  }
+  .footer__brand {
+    justify-self: start;
+  }
+  .footer__tagline {
+    font-size: 0.875rem;
+    opacity: 0.85;
+  }
+  .footer__contact {
+    justify-self: center;
+    margin-top: 0;
+    display: grid;
+    gap: .25rem;
+  }
+  .footer__contact-heading {
+    font-size: 0.95rem;
+    margin: 0;
+  }
+  .footer__address {
+    font-style: normal;
+    font-size: 0.9rem;
+    display: grid;
+    gap: .15rem;
+  }
+  .footer__address-line a {
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+  .footer__address-line a:hover {
+    color: var(--color-link);
+  }
+  .footer__utility { justify-self: end; display: grid; gap: .5rem; }
+  .footer__social { display: flex; gap: 0.75rem; }
+  .footer__social svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    fill: currentColor;
+  }
+  .footer__links-heading { font-size: 0.95rem; margin: 0; }
+  .footer__links-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .2rem; }
+  .footer__links-list a:hover { color: var(--color-link); }
+  .footer__bottom {
     display: flex;
     justify-content: space-between;
-    margin-top: 2rem;
-  }
-  footer a {
-    text-decoration: none;
-    color: var(--color-foreground);
-  }
-  footer .footer__links,
-  footer .footer__payment {
-    display: flex;
+    align-items: center;
     gap: 1rem;
+    padding-inline: var(--page-margin);
+  }
+  .footer__payment {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
   }
 {% endstylesheet %}
 
@@ -51,6 +177,92 @@
       "id": "show_payment_icons",
       "label": "t:labels.show_payment_icons",
       "default": true
+    },
+    {
+      "type": "header",
+      "content": "Contact"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_contact",
+      "label": "Show contact information",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "contact_heading",
+      "label": "Contact heading",
+      "default": "Contact Information"
+    },
+    {
+      "type": "textarea",
+      "id": "contact_address",
+      "label": "Address",
+      "default": "Ajman, Al Nuaimiya, Behind Hemdan Center, UAE (9FP7+3P4 - Al Nuaimia 1 - Ajman - United Arab Emirates)"
+    },
+    {
+      "type": "text",
+      "id": "contact_phone",
+      "label": "Phone",
+      "default": "+971528233359"
+    },
+    {
+      "type": "text",
+      "id": "contact_email",
+      "label": "Email",
+      "default": "info@blackfridaydeals-uae.com"
+    },
+    {
+      "type": "text",
+      "id": "contact_hours",
+      "label": "Opening hours",
+      "default": "From 11:00 AM to 11:00 PM"
+    },
+    {
+      "type": "header",
+      "content": "Social"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_utility_links",
+      "label": "Show utility links",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "utility_heading",
+      "label": "Utility heading",
+      "default": "Policies"
+    },
+    {
+      "type": "text",
+      "id": "refund_policy_url",
+      "label": "Refund policy URL (fallback)",
+      "default": "/policies/refund-policy"
+    },
+    {
+      "type": "text",
+      "id": "shipping_policy_url",
+      "label": "Shipping policy URL (fallback)",
+      "default": "/policies/shipping-policy"
+    },
+    {
+      "type": "text",
+      "id": "facebook_url",
+      "label": "Facebook URL",
+      "default": "https://www.facebook.com/blackfridaydeals.uae/"
+    },
+    {
+      "type": "text",
+      "id": "instagram_url",
+      "label": "Instagram URL",
+      "default": "https://www.instagram.com/blackfridaydeals.uae/?hl=en"
+    },
+    {
+      "type": "text",
+      "id": "tiktok_url",
+      "label": "TikTok URL",
+      "default": "https://www.tiktok.com/@blackfridaydeals.uae"
     }
   ]
 }
