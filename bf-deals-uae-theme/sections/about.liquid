@@ -181,8 +181,8 @@
   }
 
   .about__eyebrow {
+    display: none;
     margin: 0;
-    display: inline-flex;
     width: fit-content;
     padding: .35rem .65rem;
     border-radius: 999px;
@@ -267,17 +267,19 @@
   .about__stat {
     padding: 1rem 1.1rem;
     border-radius: 16px;
-    background: var(--about-card-bg);
-    border: 1px solid color-mix(in oklab, var(--color-foreground) 12%, transparent);
+    background: #000;
+    border: 1px solid red;
   }
 
   .about__stat-value {
+    color: white;
     font-size: 1.35rem;
     font-weight: 750;
     letter-spacing: -.02em;
   }
 
   .about__stat-label {
+    color: white;
     margin-top: .25rem;
     opacity: .85;
   }
@@ -291,8 +293,9 @@
   .about__card {
     padding: 1.15rem 1.15rem 1.25rem;
     border-radius: 18px;
-    background: var(--about-card-bg);
-    border: 1px solid color-mix(in oklab, var(--color-foreground) 12%, transparent);
+    background: #000;
+    color:white;
+    border: 1px solid red;
   }
 
   .about__card-title {
