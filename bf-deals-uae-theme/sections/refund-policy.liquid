@@ -1,28 +1,168 @@
-{% doc %}
-  Refund policy static content section.
-{% enddoc %}
-
 <section class="refund-policy">
   <div class="refund-policy__inner">
     {% liquid
       assign policy_title = blank
       assign policy_body = blank
+      assign has_policy_body = false
+      assign updated_date = 'now' | date: '%B %d, %Y'
 
       if shop.refund_policy != blank
         assign policy_title = shop.refund_policy.title
         assign policy_body = shop.refund_policy.body
-      elsif page != blank
-        assign policy_title = page.title
-        assign policy_body = page.content
+      endif
+
+      if policy_body != blank
+        assign has_policy_body = true
+      endif
+
+      if has_policy_body == false
+        if page != blank
+          if page.content != blank
+            assign policy_title = page.title
+            assign policy_body = page.content
+            assign has_policy_body = true
+          endif
+        endif
+      endif
+
+      if policy_title == blank
+        if page != blank
+          if page.title != blank
+            assign policy_title = page.title
+          endif
+        endif
+      endif
+
+      if policy_title == blank
+        assign policy_title = 'refund_policy.title_fallback' | t
       endif
     %}
 
-    {% if policy_body != blank %}
-      {% if policy_title != blank %}
-        <h1>{{ policy_title | escape }}</h1>
-      {% endif %}
+    {% if policy_title != blank %}
+      <h1>{{ policy_title | escape }}</h1>
+    {% endif %}
+
+    {% if has_policy_body %}
       <div class="refund-policy__content rte">
         {{ policy_body }}
+      </div>
+    {% else %}
+      <p class="refund-policy__meta">{{ 'refund_policy.updated' | t: date: updated_date }}</p>
+
+      <div class="refund-policy__lead">
+        <p class="refund-policy__intro">{{ 'refund_policy.intro_html' | t: shop_name: shop.name }}</p>
+      </div>
+
+      <div class="refund-policy__summary" role="note" aria-label="{{ 'refund_policy.summary_aria' | t | escape }}">
+        <h2 class="refund-policy__summary-title">{{ 'refund_policy.summary_title' | t }}</h2>
+        <ul class="refund-policy__summary-list">
+          <li>{{ 'refund_policy.summary_window' | t: days: section.settings.return_window_days }}</li>
+          <li>{{ 'refund_policy.summary_condition' | t }}</li>
+          <li>{{ 'refund_policy.summary_refunds' | t }}</li>
+          <li>
+            {{ 'refund_policy.summary_processing' | t: min_days: section.settings.processing_min_days, max_days: section.settings.processing_max_days }}
+          </li>
+        </ul>
+      </div>
+
+      <div class="refund-policy__accordions">
+        <details class="refund-policy__details" open>
+          <summary class="refund-policy__summary">
+            <span>{{ 'refund_policy.section_eligibility_title' | t }}</span>
+          </summary>
+          <div class="refund-policy__details-body">
+            <ul>
+              <li>{{ 'refund_policy.eligibility_1' | t: days: section.settings.return_window_days }}</li>
+              <li>{{ 'refund_policy.eligibility_2' | t }}</li>
+              <li>{{ 'refund_policy.eligibility_3' | t }}</li>
+            </ul>
+          </div>
+        </details>
+
+        <details class="refund-policy__details">
+          <summary class="refund-policy__summary">
+            <span>{{ 'refund_policy.section_non_returnable_title' | t }}</span>
+          </summary>
+          <div class="refund-policy__details-body">
+            <ul>
+              <li>{{ 'refund_policy.non_returnable_1' | t }}</li>
+              <li>{{ 'refund_policy.non_returnable_2' | t }}</li>
+              <li>{{ 'refund_policy.non_returnable_3' | t }}</li>
+            </ul>
+            {% if section.settings.final_sale_note != blank %}
+              <p class="refund-policy__note">{{ section.settings.final_sale_note | escape }}</p>
+            {% endif %}
+          </div>
+        </details>
+
+        <details class="refund-policy__details">
+          <summary class="refund-policy__summary">
+            <span>{{ 'refund_policy.section_start_title' | t }}</span>
+          </summary>
+          <div class="refund-policy__details-body">
+            <ol>
+              <li>{{ 'refund_policy.start_1' | t }}</li>
+              <li>{{ 'refund_policy.start_2' | t }}</li>
+              <li>{{ 'refund_policy.start_3' | t }}</li>
+            </ol>
+          </div>
+        </details>
+
+        <details class="refund-policy__details">
+          <summary class="refund-policy__summary">
+            <span>{{ 'refund_policy.section_refunds_title' | t }}</span>
+          </summary>
+          <div class="refund-policy__details-body">
+            <p>{{ 'refund_policy.refunds_1' | t }}</p>
+            <p>{{ 'refund_policy.refunds_2' | t: min_days: section.settings.processing_min_days, max_days: section.settings.processing_max_days }}</p>
+          </div>
+        </details>
+
+        <details class="refund-policy__details">
+          <summary class="refund-policy__summary">
+            <span>{{ 'refund_policy.section_damaged_title' | t }}</span>
+          </summary>
+          <div class="refund-policy__details-body">
+            <p>{{ 'refund_policy.damaged_1' | t }}</p>
+            <p>{{ 'refund_policy.damaged_2' | t }}</p>
+          </div>
+        </details>
+
+        <details class="refund-policy__details">
+          <summary class="refund-policy__summary">
+            <span>{{ 'refund_policy.section_contact_title' | t }}</span>
+          </summary>
+          <div class="refund-policy__details-body">
+            <p>{{ 'refund_policy.contact_intro' | t }}</p>
+
+            <ul class="refund-policy__contact">
+              {% if section.settings.support_email != blank %}
+                <li>
+                  <span class="refund-policy__contact-label">{{ 'refund_policy.contact_email_label' | t }}</span>
+                  <a href="mailto:{{ section.settings.support_email | escape }}">{{ section.settings.support_email | escape }}</a>
+                </li>
+              {% endif %}
+
+              {% if section.settings.support_phone != blank %}
+                <li>
+                  <span class="refund-policy__contact-label">{{ 'refund_policy.contact_phone_label' | t }}</span>
+                  <a href="tel:{{ section.settings.support_phone | escape }}">{{ section.settings.support_phone | escape }}</a>
+                </li>
+              {% endif %}
+
+              {% if section.settings.support_whatsapp != blank %}
+                <li>
+                  <span class="refund-policy__contact-label">{{ 'refund_policy.contact_whatsapp_label' | t }}</span>
+                  <a href="{{ section.settings.support_whatsapp | escape }}">{{ 'refund_policy.contact_whatsapp_cta' | t }}</a>
+                </li>
+              {% endif %}
+            </ul>
+
+            {% if section.settings.support_email == blank and section.settings.support_phone == blank and section.settings.support_whatsapp == blank %}
+              <p class="refund-policy__note">{{ 'refund_policy.contact_fallback' | t }}</p>
+            {% endif %}
+          </div>
+        </details>
       </div>
     {% endif %}
   </div>
@@ -42,28 +182,199 @@
     margin: 0 0 .75rem 0;
     color: var(--color-foreground);
   }
-  .refund-policy h2 {
-    margin-top: 1.25rem;
-    font-size: 1.2rem;
-    color: var(--color-foreground);
+  .refund-policy__meta {
+    margin: 0 0 1rem 0;
+    color: color-mix(in oklab, var(--color-foreground) 70%, transparent);
+    font-size: .95rem;
   }
-  .refund-policy h3 {
-    margin-top: 1rem;
+  .refund-policy__lead {
+    margin-bottom: 1.25rem;
+    max-width: 75ch;
+  }
+  .refund-policy__intro {
+    margin: 0;
     font-size: 1.05rem;
+    line-height: 1.6;
     color: var(--color-foreground);
   }
-  .refund-policy p, .refund-policy li {
+  .refund-policy__summary {
+    border: 1px solid color-mix(in oklab, var(--color-foreground) 14%, transparent);
+    background: color-mix(in oklab, var(--color-foreground) 4%, transparent);
+    border-radius: 16px;
+    padding: 1rem;
+    margin: 0 0 1.25rem 0;
+  }
+  .refund-policy__summary-title {
+    margin: 0 0 .75rem 0;
+    font-size: 1.05rem;
+    letter-spacing: .01em;
     color: var(--color-foreground);
   }
-  .refund-policy a { color: var(--color-link); }
+  .refund-policy__summary-list {
+    margin: 0;
+    padding-left: 1.1rem;
+    display: grid;
+    gap: .5rem;
+  }
+  .refund-policy__details {
+    border: 1px solid color-mix(in oklab, var(--color-foreground) 14%, transparent);
+    border-radius: 16px;
+    overflow: clip;
+    background: color-mix(in oklab, var(--color-foreground) 2%, transparent);
+  }
+  .refund-policy__details + .refund-policy__details {
+    margin-top: .75rem;
+  }
+  .refund-policy__summary {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: .95rem 1rem;
+    cursor: pointer;
+    user-select: none;
+    color: var(--color-foreground);
+    font-weight: 650;
+  }
+  .refund-policy__summary::-webkit-details-marker {
+    display: none;
+  }
+  .refund-policy__summary::after {
+    content: '';
+    width: 12px;
+    height: 12px;
+    border-right: 2px solid color-mix(in oklab, var(--color-foreground) 70%, transparent);
+    border-bottom: 2px solid color-mix(in oklab, var(--color-foreground) 70%, transparent);
+    transform: rotate(45deg);
+    transition: transform 160ms ease;
+    flex: none;
+  }
+  .refund-policy__details[open] .refund-policy__summary::after {
+    transform: rotate(-135deg);
+  }
+  .refund-policy__details-body {
+    padding: 0 1rem 1rem 1rem;
+    color: var(--color-foreground);
+  }
+  .refund-policy__details-body p {
+    margin: 0 0 .75rem 0;
+    line-height: 1.6;
+  }
+  .refund-policy__details-body ul,
+  .refund-policy__details-body ol {
+    margin: 0;
+    padding-left: 1.2rem;
+    display: grid;
+    gap: .5rem;
+  }
+  .refund-policy__details-body li {
+    line-height: 1.6;
+  }
+  .refund-policy__note {
+    margin: .85rem 0 0 0;
+    padding: .75rem .9rem;
+    border-radius: 14px;
+    border: 1px dashed color-mix(in oklab, var(--color-foreground) 20%, transparent);
+    background: color-mix(in oklab, var(--color-foreground) 3%, transparent);
+    color: color-mix(in oklab, var(--color-foreground) 85%, transparent);
+  }
+  .refund-policy__contact {
+    margin-top: .75rem;
+    padding-left: 0;
+    list-style: none;
+    display: grid;
+    gap: .5rem;
+  }
+  .refund-policy__contact li {
+    display: grid;
+    grid-template-columns: minmax(10ch, 18ch) 1fr;
+    gap: .5rem 1rem;
+    align-items: baseline;
+  }
+  .refund-policy__contact-label {
+    color: color-mix(in oklab, var(--color-foreground) 70%, transparent);
+    font-weight: 600;
+  }
+  .refund-policy a {
+    color: var(--color-link);
+    text-underline-offset: 3px;
+  }
+  .refund-policy a:hover {
+    text-decoration-thickness: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .refund-policy__summary::after { transition: none; }
+  }
 {% endstylesheet %}
 
 {% schema %}
 {
-  "name": "Refund policy",
-  "settings": [],
+  "name": "t:sections.refund_policy.name",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.refund_policy.settings_header_policy"
+    },
+    {
+      "type": "range",
+      "id": "return_window_days",
+      "label": "t:sections.refund_policy.return_window_days_label",
+      "min": 1,
+      "max": 30,
+      "step": 1,
+      "unit": "d",
+      "default": 7
+    },
+    {
+      "type": "range",
+      "id": "processing_min_days",
+      "label": "t:sections.refund_policy.processing_min_days_label",
+      "min": 1,
+      "max": 14,
+      "step": 1,
+      "unit": "d",
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "processing_max_days",
+      "label": "t:sections.refund_policy.processing_max_days_label",
+      "min": 1,
+      "max": 30,
+      "step": 1,
+      "unit": "d",
+      "default": 10
+    },
+    {
+      "type": "text",
+      "id": "final_sale_note",
+      "label": "t:sections.refund_policy.final_sale_note_label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.refund_policy.settings_header_contact"
+    },
+    {
+      "type": "text",
+      "id": "support_email",
+      "label": "t:sections.refund_policy.support_email_label",
+      "default": "info@blackfridaydeals-uae.com"
+    },
+    {
+      "type": "text",
+      "id": "support_phone",
+      "label": "t:sections.refund_policy.support_phone_label"
+    },
+    {
+      "type": "url",
+      "id": "support_whatsapp",
+      "label": "t:sections.refund_policy.support_whatsapp_label"
+    }
+  ],
   "presets": [
-    { "name": "Refund policy" }
+    { "name": "t:sections.refund_policy.preset" }
   ]
 }
 {% endschema %}

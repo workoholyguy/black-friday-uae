@@ -99,5 +99,52 @@
       "subtitle": "Subtitle",
       "normal": "Normal text"
     }
+  },
+  "sections": {
+    "refund_policy": {
+      "name": "Refund policy",
+      "preset": "Refund policy",
+      "settings_header_policy": "Policy settings",
+      "settings_header_contact": "Support contact",
+      "return_window_days_label": "Return window (days)",
+      "processing_min_days_label": "Refund processing (min days)",
+      "processing_max_days_label": "Refund processing (max days)",
+      "final_sale_note_label": "Final sale note (optional)",
+      "support_email_label": "Support email",
+      "support_phone_label": "Support phone (optional)",
+      "support_whatsapp_label": "WhatsApp link (optional)"
+    },
+    "shipping_policy": {
+      "name": "Shipping policy",
+      "preset": "Shipping policy",
+      "settings_header_shipping": "Shipping settings",
+      "settings_header_contact": "Contact details",
+      "shipping_region_label": "Shipping region",
+      "free_shipping_label": "Offer free shipping",
+      "handling_min_days_label": "Handling time (min days)",
+      "handling_max_days_label": "Handling time (max days)",
+      "transit_min_days_label": "Transit time (min days)",
+      "transit_max_days_label": "Transit time (max days)",
+      "cutoff_time_label": "Order cut-off time",
+      "support_email_label": "Support email",
+      "support_phone_label": "Support phone (optional)",
+      "support_address_label": "Address (optional)"
+    },
+    "terms_of_service": {
+      "name": "Terms of service",
+      "preset": "Terms of service",
+      "settings_header_contact": "Contact details",
+      "support_email_label": "Support email",
+      "support_phone_label": "Support phone (optional)",
+      "support_address_label": "Address (optional)"
+    },
+    "privacy_policy": {
+      "name": "Privacy policy",
+      "preset": "Privacy policy",
+      "settings_header_contact": "Contact details",
+      "support_email_label": "Support email",
+      "support_phone_label": "Support phone (optional)",
+      "support_address_label": "Address (optional)"
+    }
   }
 }

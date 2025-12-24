@@ -12,20 +12,51 @@
         {% endif %}
         <address class="footer__address">
           {% if section.settings.contact_address != blank %}
-            <p class="footer__address-line">{{ section.settings.contact_address | newline_to_br }}</p>
+            <p class="footer__address-line footer__address-line--address">
+              <span class="footer__address-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" role="presentation" focusable="false">
+                  <path d="M12 2c-3.86 0-7 3.14-7 7 0 5.27 6.25 12.24 6.52 12.53.26.29.7.29.96 0C12.75 21.24 19 14.27 19 9c0-3.86-3.14-7-7-7Zm0 17.18C10.48 17.3 7 12.7 7 9c0-2.76 2.24-5 5-5s5 2.24 5 5c0 3.7-3.48 8.3-5 10.18ZM12 6.5A2.5 2.5 0 1 0 12 11.5 2.5 2.5 0 0 0 12 6.5Z"/>
+                </svg>
+              </span>
+              <a
+                class="footer__address-text footer__address-link footer__address-link--map"
+                href="https://www.google.com/maps/place/Black+Friday+deals/@25.3851875,55.4617376,765m/data=!3m2!1e3!4b1!4m6!3m5!1s0x3e5f5900797a60b5:0xc464ded4901a91f3!8m2!3d25.3851875!4d55.4643125!16s%2Fg%2F11lypqp1zj?entry=ttu&amp;g_ep=EgoyMDI1MTIwOS4wIKXMDSoASAFQAw%3D%3D"
+                target="_blank"
+                rel="noopener"
+              >
+                {{ section.settings.contact_address | newline_to_br }}
+              </a>
+            </p>
           {% endif %}
           {% if section.settings.contact_phone != blank %}
-            <p class="footer__address-line">
+            <p class="footer__address-line footer__address-line--phone">
+              <span class="footer__address-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" role="presentation" focusable="false">
+                  <path d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1-.24c1.12.37 2.33.57 3.59.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1C10.07 21 3 13.93 3 5a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.26.2 2.47.57 3.59a1 1 0 0 1-.24 1l-2.21 2.2Z"/>
+                </svg>
+              </span>
               <a href="tel:{{ section.settings.contact_phone | replace: ' ', '' }}">{{ section.settings.contact_phone }}</a>
             </p>
           {% endif %}
           {% if section.settings.contact_email != blank %}
-            <p class="footer__address-line">
+            <p class="footer__address-line footer__address-line--email">
+              <span class="footer__address-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" role="presentation" focusable="false">
+                  <path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4-8 5L4 8V6l8 5 8-5v2Z"/>
+                </svg>
+              </span>
               <a href="mailto:{{ section.settings.contact_email }}">{{ section.settings.contact_email }}</a>
             </p>
           {% endif %}
           {% if section.settings.contact_hours != blank %}
-            <p class="footer__address-line">{{ section.settings.contact_hours }}</p>
+            <p class="footer__address-line footer__address-line--hours">
+              <span class="footer__address-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" role="presentation" focusable="false">
+                  <path d="M12 2a10 10 0 1 0 .001 20.001A10 10 0 0 0 12 2Zm1 11h5v-2h-4V6h-2v7Z"/>
+                </svg>
+              </span>
+              <span class="footer__address-text">{{ section.settings.contact_hours }}</span>
+            </p>
           {% endif %}
         </address>
       </div>
@@ -56,7 +87,11 @@
           {% endif %}
           <ul class="footer__links-list">
             <li><a href="{{ routes.search_url }}">Search</a></li>
-            {% if shop.privacy_policy %}<li><a href="{{ shop.privacy_policy.url }}">Privacy Policy</a></li>{% endif %}
+            {% if shop.privacy_policy %}
+              <li><a href="{{ shop.privacy_policy.url }}">Privacy Policy</a></li>
+            {% elsif section.settings.privacy_policy_url != blank %}
+              <li><a href="{{ section.settings.privacy_policy_url }}">Privacy Policy</a></li>
+            {% endif %}
             {% if shop.refund_policy %}
               <li><a href="{{ shop.refund_policy.url }}">Refund Policy</a></li>
             {% elsif section.settings.refund_policy_url != blank %}
@@ -68,7 +103,11 @@
                 <li><a href="{{ section.settings.shipping_policy_url }}">Shipping Policy</a></li>
               {% endif %}
             {% endunless %}
-            {% if shop.terms_of_service %}<li><a href="{{ shop.terms_of_service.url }}">Terms of Service</a></li>{% endif %}
+            {% if shop.terms_of_service %}
+              <li><a href="{{ shop.terms_of_service.url }}">{{ 'footer.terms_of_service' | t }}</a></li>
+            {% elsif section.settings.terms_of_service_url != blank %}
+              <li><a href="{{ section.settings.terms_of_service_url }}">{{ 'footer.terms_of_service' | t }}</a></li>
+            {% endif %}
           </ul>
         </div>
       {% endif %}
@@ -131,6 +170,26 @@
     font-size: 0.9rem;
     display: grid;
     gap: .15rem;
+  }
+  .footer__address-line {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  .footer__address-icon {
+    flex: 0 0 auto;
+    width: 1rem;
+    height: 1rem;
+    opacity: 0.9;
+    margin-top: 0.15rem;
+  }
+  .footer__address-icon svg {
+    width: 100%;
+    height: 100%;
+    fill: currentColor;
+  }
+  .footer__address-text {
+    min-width: 0;
   }
   .footer__address-line a {
     color: var(--color-accent);
@@ -238,13 +297,25 @@
       "type": "text",
       "id": "refund_policy_url",
       "label": "Refund policy URL (fallback)",
-      "default": "/policies/refund-policy"
+      "default": "/pages/refund-policy"
     },
     {
       "type": "text",
       "id": "shipping_policy_url",
       "label": "Shipping policy URL (fallback)",
-      "default": "/policies/shipping-policy"
+      "default": "/pages/shipping-policy"
+    },
+    {
+      "type": "text",
+      "id": "privacy_policy_url",
+      "label": "Privacy policy URL (fallback)",
+      "default": "/pages/privacy-policy"
+    },
+    {
+      "type": "text",
+      "id": "terms_of_service_url",
+      "label": "Terms of service URL (fallback)",
+      "default": "/pages/terms-of-service"
     },
     {
       "type": "text",

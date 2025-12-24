@@ -1,0 +1,429 @@
+<section class="legal legal--terms" data-legal-doc>
+  <div class="legal__inner">
+    {% liquid
+      assign policy_title = blank
+      assign policy_body = blank
+      assign has_policy_body = false
+      assign updated_date = 'now' | date: '%B %d, %Y'
+
+      if shop.terms_of_service != blank
+        assign policy_title = shop.terms_of_service.title
+        assign policy_body = shop.terms_of_service.body
+      endif
+
+      if policy_body != blank
+        assign has_policy_body = true
+      endif
+
+      if has_policy_body == false
+        if page != blank
+          if page.content != blank
+            assign policy_title = page.title
+            assign policy_body = page.content
+            assign has_policy_body = true
+          endif
+        endif
+      endif
+
+      if policy_title == blank
+        if page != blank
+          if page.title != blank
+            assign policy_title = page.title
+          endif
+        endif
+      endif
+
+      if policy_title == blank
+        assign policy_title = 'terms_of_service.title_fallback' | t
+      endif
+
+      assign refund_url = '/pages/refund-policy'
+      if shop.refund_policy != blank
+        assign refund_url = shop.refund_policy.url
+      endif
+
+      assign privacy_url = '/pages/privacy-policy'
+      if shop.privacy_policy != blank
+        assign privacy_url = shop.privacy_policy.url
+      endif
+    %}
+
+    <header class="legal__header" id="top">
+      <h1 class="legal__title">{{ policy_title | escape }}</h1>
+      <div class="legal__meta">
+        <span class="legal__meta-item">{{ 'terms_of_service.updated' | t: date: updated_date }}</span>
+      </div>
+      {% unless has_policy_body %}
+        <p class="legal__intro">{{ 'terms_of_service.intro_html' | t: shop_name: shop.name }}</p>
+      {% endunless %}
+    </header>
+
+    <div class="legal__layout">
+      <aside class="legal__toc" data-legal-toc hidden>
+        <details class="legal__toc-details" open>
+          <summary class="legal__toc-summary">{{ 'legal.on_this_page' | t }}</summary>
+          <nav class="legal__toc-nav" aria-label="{{ 'legal.toc_aria' | t | escape }}">
+            <ol class="legal__toc-list" data-legal-toc-list></ol>
+          </nav>
+          <a class="legal__back-to-top" href="#top">{{ 'legal.back_to_top' | t }}</a>
+        </details>
+      </aside>
+
+      <div class="legal__content rte" data-legal-content>
+        {% if has_policy_body %}
+          {{ policy_body }}
+        {% else %}
+          {{ 'terms_of_service.body_01_html' | t: shop_name: shop.name, refund_url: refund_url, privacy_url: privacy_url }}
+          {{ 'terms_of_service.body_02_html' | t: shop_name: shop.name, refund_url: refund_url, privacy_url: privacy_url }}
+          {{ 'terms_of_service.body_03_html' | t: shop_name: shop.name, refund_url: refund_url, privacy_url: privacy_url }}
+          {{ 'terms_of_service.body_04_html' | t: shop_name: shop.name, refund_url: refund_url, privacy_url: privacy_url }}
+          {{ 'terms_of_service.body_05_html' | t: shop_name: shop.name, refund_url: refund_url, privacy_url: privacy_url }}
+          {{ 'terms_of_service.body_06_html' | t: shop_name: shop.name, refund_url: refund_url, privacy_url: privacy_url }}
+          {{ 'terms_of_service.body_07a_html' | t: shop_name: shop.name, refund_url: refund_url, privacy_url: privacy_url }}
+          {{ 'terms_of_service.body_07b_html' | t: shop_name: shop.name, refund_url: refund_url, privacy_url: privacy_url }}
+          {{ 'terms_of_service.body_07c_html' | t: shop_name: shop.name, refund_url: refund_url, privacy_url: privacy_url }}
+          {{ 'terms_of_service.body_07d_html' | t: shop_name: shop.name, refund_url: refund_url, privacy_url: privacy_url }}
+
+          {{ 'terms_of_service.body_08a_html' | t: shop_name: shop.name, refund_url: refund_url, privacy_url: privacy_url }}
+          {{ 'terms_of_service.body_08b_html' | t: shop_name: shop.name, refund_url: refund_url, privacy_url: privacy_url }}
+          {{ 'terms_of_service.body_08c_html' | t: shop_name: shop.name, refund_url: refund_url, privacy_url: privacy_url }}
+          {{ 'terms_of_service.body_08d_html' | t: shop_name: shop.name, refund_url: refund_url, privacy_url: privacy_url }}
+          {{ 'terms_of_service.body_08e_html' | t: shop_name: shop.name, refund_url: refund_url, privacy_url: privacy_url }}
+
+          {{ 'terms_of_service.body_09a_html' | t: shop_name: shop.name, refund_url: refund_url, privacy_url: privacy_url }}
+          {{ 'terms_of_service.body_09b_html' | t: shop_name: shop.name, refund_url: refund_url, privacy_url: privacy_url }}
+          {{ 'terms_of_service.body_09c_html' | t: shop_name: shop.name, refund_url: refund_url, privacy_url: privacy_url }}
+          {{ 'terms_of_service.body_10a_html' | t: shop_name: shop.name, refund_url: refund_url, privacy_url: privacy_url }}
+          {{ 'terms_of_service.body_10b_html' | t: shop_name: shop.name, refund_url: refund_url, privacy_url: privacy_url }}
+          {{ 'terms_of_service.body_10c1_html' | t: shop_name: shop.name, refund_url: refund_url, privacy_url: privacy_url }}
+          {{ 'terms_of_service.body_10c2_html' | t: shop_name: shop.name, refund_url: refund_url, privacy_url: privacy_url }}
+          {{ 'terms_of_service.body_10c3_html' | t: shop_name: shop.name, refund_url: refund_url, privacy_url: privacy_url }}
+
+          {{ 'terms_of_service.body_11a1_html' | t: shop_name: shop.name, refund_url: refund_url, privacy_url: privacy_url }}
+          {{ 'terms_of_service.body_11a2_html' | t: shop_name: shop.name, refund_url: refund_url, privacy_url: privacy_url }}
+          {{ 'terms_of_service.body_11b_html' | t: shop_name: shop.name, refund_url: refund_url, privacy_url: privacy_url }}
+          {{ 'terms_of_service.body_12a_html' | t: shop_name: shop.name, refund_url: refund_url, privacy_url: privacy_url }}
+          {{ 'terms_of_service.body_12b_html' | t: shop_name: shop.name, refund_url: refund_url, privacy_url: privacy_url }}
+          {{ 'terms_of_service.body_12c_html' | t: shop_name: shop.name, refund_url: refund_url, privacy_url: privacy_url }}
+          {{ 'terms_of_service.body_12d_html' | t: shop_name: shop.name, refund_url: refund_url, privacy_url: privacy_url }}
+          {{ 'terms_of_service.body_12e_html' | t: shop_name: shop.name, refund_url: refund_url, privacy_url: privacy_url }}
+          {{ 'terms_of_service.body_12f_html' | t: shop_name: shop.name, refund_url: refund_url, privacy_url: privacy_url }}
+          {{ 'terms_of_service.body_12g_html' | t: shop_name: shop.name, refund_url: refund_url, privacy_url: privacy_url }}
+          {{ 'terms_of_service.body_12h_html' | t: shop_name: shop.name, refund_url: refund_url, privacy_url: privacy_url }}
+          {{ 'terms_of_service.body_12i_html' | t: shop_name: shop.name, refund_url: refund_url, privacy_url: privacy_url }}
+          {{ 'terms_of_service.body_12j_html' | t: shop_name: shop.name, refund_url: refund_url, privacy_url: privacy_url }}
+          {{ 'terms_of_service.body_12k_html' | t: shop_name: shop.name, refund_url: refund_url, privacy_url: privacy_url }}
+          {{ 'terms_of_service.body_12l_html' | t: shop_name: shop.name, refund_url: refund_url, privacy_url: privacy_url }}
+          {{ 'terms_of_service.body_12m_html' | t: shop_name: shop.name, refund_url: refund_url, privacy_url: privacy_url }}
+          {{ 'terms_of_service.body_12n_html' | t: shop_name: shop.name, refund_url: refund_url, privacy_url: privacy_url }}
+          {{ 'terms_of_service.body_12o_html' | t: shop_name: shop.name, refund_url: refund_url, privacy_url: privacy_url }}
+          {{ 'terms_of_service.body_12p_html' | t: shop_name: shop.name, refund_url: refund_url, privacy_url: privacy_url }}
+          {{ 'terms_of_service.body_12q_html' | t: shop_name: shop.name, refund_url: refund_url, privacy_url: privacy_url }}
+          {{ 'terms_of_service.body_12r_html' | t: shop_name: shop.name, refund_url: refund_url, privacy_url: privacy_url }}
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="legal__contact" role="note" aria-label="{{ 'terms_of_service.contact_aria' | t | escape }}">
+      <h2 class="legal__contact-title">{{ 'terms_of_service.contact_title' | t }}</h2>
+      <p class="legal__contact-intro">{{ 'terms_of_service.contact_intro' | t }}</p>
+
+      <ul class="legal__contact-list">
+        {% if section.settings.support_email != blank %}
+          <li>
+            <span class="legal__contact-label">{{ 'terms_of_service.contact_email_label' | t }}</span>
+            <a href="mailto:{{ section.settings.support_email | escape }}">{{ section.settings.support_email | escape }}</a>
+          </li>
+        {% endif %}
+        {% if section.settings.support_phone != blank %}
+          <li>
+            <span class="legal__contact-label">{{ 'terms_of_service.contact_phone_label' | t }}</span>
+            <a href="tel:{{ section.settings.support_phone | escape }}">{{ section.settings.support_phone | escape }}</a>
+          </li>
+        {% endif %}
+        {% if section.settings.support_address != blank %}
+          <li>
+            <span class="legal__contact-label">{{ 'terms_of_service.contact_address_label' | t }}</span>
+            <span>{{ section.settings.support_address | escape }}</span>
+          </li>
+        {% endif %}
+      </ul>
+
+      {% if section.settings.support_email == blank and section.settings.support_phone == blank and section.settings.support_address == blank %}
+        <p class="legal__note">{{ 'terms_of_service.contact_fallback' | t }}</p>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .legal__inner {
+    display: grid;
+    grid-template-columns: var(--content-grid);
+    padding-block: clamp(1.5rem, 4vw, 3rem);
+  }
+  .legal__inner > * {
+    grid-column: 2;
+  }
+
+  .legal__header {
+    margin-bottom: 1.25rem;
+  }
+  .legal__title {
+    font-size: clamp(1.6rem, 4vw, 2.35rem);
+    margin: 0 0 .6rem 0;
+    color: var(--color-foreground);
+    letter-spacing: -0.02em;
+  }
+  .legal__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .4rem .75rem;
+    margin: 0 0 .9rem 0;
+    color: color-mix(in oklab, var(--color-foreground) 70%, transparent);
+    font-size: .95rem;
+  }
+  .legal__intro {
+    margin: 0;
+    max-width: 85ch;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: var(--color-foreground);
+  }
+
+  .legal__layout {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .legal__toc-details {
+    border: 1px solid color-mix(in oklab, var(--color-foreground) 14%, transparent);
+    border-radius: 16px;
+    background: color-mix(in oklab, var(--color-foreground) 2%, transparent);
+    padding: .25rem;
+  }
+  .legal__toc-summary {
+    list-style: none;
+    cursor: pointer;
+    user-select: none;
+    padding: .75rem .85rem;
+    font-weight: 650;
+    color: var(--color-foreground);
+  }
+  .legal__toc-summary::-webkit-details-marker {
+    display: none;
+  }
+  .legal__toc-nav {
+    padding: 0 .85rem .75rem .85rem;
+  }
+  .legal__toc-list {
+    margin: 0;
+    padding-left: 1.1rem;
+    display: grid;
+    gap: .4rem;
+  }
+  .legal__toc-list a {
+    color: color-mix(in oklab, var(--color-foreground) 85%, transparent);
+    text-decoration: none;
+  }
+  .legal__toc-list a:hover {
+    color: var(--color-link);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .legal__toc-list .is-sub {
+    padding-left: .75rem;
+    font-size: .95rem;
+  }
+  .legal__back-to-top {
+    display: inline-flex;
+    padding: 0 .85rem .85rem .85rem;
+    color: color-mix(in oklab, var(--color-foreground) 75%, transparent);
+    text-decoration: none;
+    font-size: .95rem;
+  }
+  .legal__back-to-top:hover {
+    color: var(--color-link);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .legal__content {
+    max-width: 90ch;
+  }
+  .legal__content :is(h2, h3) {
+    scroll-margin-top: 1.25rem;
+  }
+  .legal__content h2 {
+    margin: 1.4rem 0 .6rem 0;
+    font-size: 1.25rem;
+    letter-spacing: -0.01em;
+    color: var(--color-foreground);
+  }
+  .legal__content h3 {
+    margin: 1.1rem 0 .5rem 0;
+    font-size: 1.05rem;
+    color: var(--color-foreground);
+  }
+  .legal__content p {
+    margin: 0 0 .85rem 0;
+    line-height: 1.75;
+    color: var(--color-foreground);
+  }
+  .legal__content :is(ul, ol) {
+    margin: .25rem 0 1rem 0;
+    padding-left: 1.25rem;
+    display: grid;
+    gap: .4rem;
+  }
+  .legal__content li {
+    line-height: 1.7;
+    color: var(--color-foreground);
+  }
+  .legal__content a {
+    color: var(--color-link);
+    text-underline-offset: 3px;
+  }
+  .legal__content a:hover {
+    text-decoration-thickness: 2px;
+  }
+
+  .legal__contact {
+    margin-top: 1.5rem;
+    border: 1px solid color-mix(in oklab, var(--color-foreground) 14%, transparent);
+    background: color-mix(in oklab, var(--color-foreground) 3%, transparent);
+    border-radius: 16px;
+    padding: 1rem;
+  }
+  .legal__contact-title {
+    margin: 0 0 .5rem 0;
+    font-size: 1.1rem;
+    color: var(--color-foreground);
+  }
+  .legal__contact-intro {
+    margin: 0 0 .75rem 0;
+    color: var(--color-foreground);
+  }
+  .legal__contact-list {
+    margin: 0;
+    padding-left: 0;
+    list-style: none;
+    display: grid;
+    gap: .5rem;
+  }
+  .legal__contact-list li {
+    display: grid;
+    grid-template-columns: minmax(10ch, 18ch) 1fr;
+    gap: .5rem 1rem;
+    align-items: baseline;
+  }
+  .legal__contact-label {
+    color: color-mix(in oklab, var(--color-foreground) 70%, transparent);
+    font-weight: 600;
+  }
+  .legal__note {
+    margin: .85rem 0 0 0;
+    padding: .75rem .9rem;
+    border-radius: 14px;
+    border: 1px dashed color-mix(in oklab, var(--color-foreground) 20%, transparent);
+    background: color-mix(in oklab, var(--color-foreground) 2%, transparent);
+    color: color-mix(in oklab, var(--color-foreground) 85%, transparent);
+  }
+
+  @media (min-width: 980px) {
+    .legal__layout {
+      grid-template-columns: minmax(240px, 320px) minmax(0, 1fr);
+      align-items: start;
+    }
+    .legal__toc {
+      position: sticky;
+      top: 1.25rem;
+      align-self: start;
+    }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  const root = document.querySelector('[data-legal-doc]')
+  if (root) {
+    const content = root.querySelector('[data-legal-content]')
+    const tocWrap = root.querySelector('[data-legal-toc]')
+    const tocList = root.querySelector('[data-legal-toc-list]')
+
+    const slugify = (value) =>
+      String(value || '')
+        .toLowerCase()
+        .trim()
+        .replace(/['"]/g, '')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '')
+
+    const headings = content ? Array.from(content.querySelectorAll('h2, h3')) : []
+
+    if (tocWrap && tocList && headings.length) {
+      const used = new Set()
+
+      for (const h of headings) {
+        const text = (h.textContent || '').trim()
+        if (!text) continue
+
+        if (!h.id) {
+          const base = slugify(text) || 'section'
+          let id = base
+          let i = 2
+          while (used.has(id) || document.getElementById(id)) {
+            id = `${base}-${i}`
+            i += 1
+          }
+          h.id = id
+          used.add(id)
+        }
+
+        const li = document.createElement('li')
+        if (h.tagName === 'H3') li.classList.add('is-sub')
+        const a = document.createElement('a')
+        a.href = `#${h.id}`
+        a.textContent = text
+        li.appendChild(a)
+        tocList.appendChild(li)
+      }
+
+      if (tocList.children.length) {
+        tocWrap.hidden = false
+      }
+    }
+  }
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "t:sections.terms_of_service.name",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.terms_of_service.settings_header_contact"
+    },
+    {
+      "type": "text",
+      "id": "support_email",
+      "label": "t:sections.terms_of_service.support_email_label",
+      "default": "info@blackfridaydeals-uae.com"
+    },
+    {
+      "type": "text",
+      "id": "support_phone",
+      "label": "t:sections.terms_of_service.support_phone_label"
+    },
+    {
+      "type": "text",
+      "id": "support_address",
+      "label": "t:sections.terms_of_service.support_address_label"
+    }
+  ],
+  "presets": [
+    { "name": "t:sections.terms_of_service.preset" }
+  ]
+}
+{% endschema %}
+
+
