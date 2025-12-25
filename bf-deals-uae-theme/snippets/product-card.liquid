@@ -65,6 +65,32 @@
         {% endif %}
       </div>
     {% endif %}
+
+    {% if product.available and variant != blank and variant.available %}
+      <form
+        class="product-card__form"
+        action="{{ routes.cart_add_url }}"
+        method="post"
+        enctype="multipart/form-data"
+        data-quick-add
+      >
+        <input type="hidden" name="id" value="{{ variant.id }}">
+        <input type="hidden" name="quantity" value="1">
+        <button
+          class="product-card__cta"
+          type="submit"
+          data-label-default="{{ 'products.add_to_cart' | t | escape }}"
+          data-label-added="{{ 'products.added_to_cart' | t | escape }}"
+          data-label-error="{{ 'products.add_to_cart_error' | t | escape }}"
+        >
+          {{ 'products.add_to_cart' | t }}
+        </button>
+      </form>
+    {% else %}
+      <button class="product-card__cta product-card__cta--disabled" type="button" disabled>
+        {{ 'products.sold_out' | t }}
+      </button>
+    {% endif %}
   </div>
 </article>
 
@@ -72,7 +98,7 @@
   .product-card {
     border-radius: 18px;
     overflow: hidden;
-    border: 1px solid red;
+    border: 1px solid color-mix(in srgb, var(--color-foreground) 12%, transparent);
     background: color-mix(in srgb, var(--color-background) 96%, var(--color-foreground) 4%);
     box-shadow: 0 14px 30px color-mix(in srgb, var(--color-foreground) 10%, transparent);
     transition: transform 160ms ease;
@@ -86,16 +112,22 @@
     position: relative;
     display: block;
     background: color-mix(in srgb, var(--color-foreground) 6%, transparent);
+    aspect-ratio: var(--product-card-media-ratio, 1 / 1);
+  }
+
+  .product-card__media .image {
+    height: 100%;
   }
 
   .product-card__image > img {
     width: 100%;
-    height: auto;
+    height: 100%;
+    object-fit: contain;
   }
 
   .product-card__placeholder {
     width: 100%;
-    height: auto;
+    height: 100%;
   }
 
   .product-card__badge {
@@ -161,6 +193,80 @@
     opacity: 0.65;
   }
 
+  .product-card__form {
+    margin-top: 0.25rem;
+  }
+
+  .product-card__cta {
+    width: 100%;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    border: 0;
+    border-radius: 999px;
+    padding: 0.65rem 0.9rem;
+    background: var(--color-primary);
+    color: var(--color-accent);
+    font-weight: 900;
+    cursor: pointer;
+    transition: transform 160ms ease, opacity 160ms ease;
+    user-select: none;
+  }
+
+  .product-card__cta:hover {
+    transform: translateY(-1px);
+  }
+
+  .product-card__cta:active {
+    transform: translateY(0);
+  }
+
+  .product-card__cta--disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .product-card__cta.is-loading {
+    opacity: 0.8;
+    cursor: progress;
+  }
+
+  .product-card--compact {
+    border-radius: 12px;
+    --product-card-media-ratio: 16 / 9;
+  }
+
+  .product-card--compact .product-card__badge {
+    inset-block-start: 10px;
+    inset-inline-start: 10px;
+    padding: 4px 8px;
+    font-size: 0.72rem;
+  }
+
+  .product-card--compact .product-card__content {
+    padding: 7px 9px 9px 9px;
+    gap: 3px;
+  }
+
+  .product-card--compact .product-card__title {
+    font-size: 0.86rem;
+    line-height: 1.2;
+  }
+
+  .product-card--compact .product-card__vendor {
+    font-size: 0.78rem;
+  }
+
+  .product-card--compact .product-card__price {
+    gap: 8px;
+  }
+
+  .product-card--compact .product-card__cta {
+    padding: 0.55rem 0.75rem;
+    font-size: 0.86rem;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .product-card {
       transition: none;
@@ -171,5 +277,92 @@
     }
   }
 {% endstylesheet %}
+
+{% javascript %}
+  if (!window.__bfQuickAddBound) {
+    window.__bfQuickAddBound = true
+
+    const setButtonLabel = (button, label) => {
+      if (!button) return
+      button.textContent = label
+    }
+
+    const getCartCount = async () => {
+      const res = await fetch('/cart.js', {
+        headers: { Accept: 'application/json' },
+      })
+      if (!res.ok) return null
+      return await res.json()
+    }
+
+    const updateHeaderCartCount = (count) => {
+      const cartLink = document.querySelector('.header__cart')
+      if (!cartLink) return
+
+      let sup = cartLink.querySelector('sup')
+      if (count > 0) {
+        if (!sup) {
+          sup = document.createElement('sup')
+          cartLink.insertBefore(sup, cartLink.firstChild)
+        }
+        sup.textContent = String(count)
+      } else if (sup) {
+        sup.remove()
+      }
+    }
+
+    document.addEventListener(
+      'submit',
+      async (event) => {
+        const form = event.target
+        if (!(form instanceof HTMLFormElement)) return
+        if (!form.matches('[data-quick-add]')) return
+
+        const button = form.querySelector('button[type="submit"]')
+        if (!(button instanceof HTMLButtonElement)) return
+
+        event.preventDefault()
+
+        const defaultLabel = button.getAttribute('data-label-default') || button.textContent
+        const addedLabel = button.getAttribute('data-label-added') || defaultLabel
+        const errorLabel = button.getAttribute('data-label-error') || defaultLabel
+
+        button.disabled = true
+        button.classList.add('is-loading')
+
+        try {
+          const res = await fetch(form.action, {
+            method: 'POST',
+            headers: { 'X-Requested-With': 'XMLHttpRequest', Accept: 'application/json' },
+            body: new FormData(form),
+          })
+
+          if (!res.ok) throw new Error('add_failed')
+
+          setButtonLabel(button, addedLabel)
+
+          const cart = await getCartCount()
+          if (cart && typeof cart.item_count === 'number') {
+            updateHeaderCartCount(cart.item_count)
+          }
+
+          window.setTimeout(() => {
+            button.disabled = false
+            button.classList.remove('is-loading')
+            setButtonLabel(button, defaultLabel)
+          }, 1200)
+        } catch (e) {
+          setButtonLabel(button, errorLabel)
+          window.setTimeout(() => {
+            button.disabled = false
+            button.classList.remove('is-loading')
+            setButtonLabel(button, defaultLabel)
+          }, 1500)
+        }
+      },
+      { passive: false }
+    )
+  }
+{% endjavascript %}
 
 

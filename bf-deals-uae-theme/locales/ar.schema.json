@@ -1,0 +1,156 @@
+{
+  "general": {
+    "404": "غير موجود",
+    "article": "مقال",
+    "block": "كتلة",
+    "blog": "مدونة",
+    "cart": "سلة التسوق",
+    "collection": "مجموعة",
+    "collections": "المجموعات",
+    "collection_card": "بطاقة مجموعة",
+    "collections_grid": "شبكة المجموعات",
+    "colors": "الألوان",
+    "column": "عمود",
+    "content": "المحتوى",
+    "custom_section": "قسم مخصص",
+    "fonts": "الخطوط",
+    "footer": "التذييل",
+    "group": "مجموعة",
+    "header": "الرأس",
+    "branding": "الهوية",
+    "layout": "التخطيط",
+    "login": "تسجيل الدخول",
+    "main": "الرئيسي",
+    "page": "صفحة",
+    "password": "كلمة المرور",
+    "primary": "أساسي",
+    "product": "منتج",
+    "row": "صف",
+    "search": "بحث",
+    "secondary": "ثانوي",
+    "section": "قسم",
+    "settings": "الإعدادات",
+    "sidebar": "الشريط الجانبي",
+    "text": "نص",
+    "theme": "الثيم",
+    "typography": "الطباعة",
+    "about": "من نحن"
+  },
+  "labels": {
+    "alignment": "المحاذاة",
+    "favicon": "الأيقونة (Favicon)",
+    "apple_touch_icon": "أيقونة Apple (Touch icon)",
+    "background": "الخلفية",
+    "foreground": "لون النص",
+    "grid_gap": "تباعد الشبكة",
+    "grid_item_width": "عرض عنصر الشبكة",
+    "input_corner_radius": "استدارة زوايا الإدخال",
+    "layout_direction": "اتجاه التخطيط",
+    "menu": "قائمة",
+    "padding": "الحشو",
+    "page_margin": "هامش الصفحة",
+    "page_width": "عرض الصفحة",
+    "show_payment_icons": "إظهار أيقونات الدفع",
+    "text_style": "نمط النص",
+    "text": "نص",
+    "about": "من نحن",
+    "body": "المحتوى",
+    "button_label": "نص الزر",
+    "button_link": "رابط الزر",
+    "card_background": "خلفية البطاقة",
+    "eyebrow": "وسم صغير",
+    "heading": "العنوان",
+    "image": "صورة",
+    "about_page": "صفحة من نحن",
+    "show_cta": "إظهار دعوة للإجراء",
+    "show_stats": "إظهار الإحصاءات",
+    "show_values": "إظهار القيم",
+    "stat_1_label": "تسمية الإحصاء 1",
+    "stat_1_value": "قيمة الإحصاء 1",
+    "stat_2_label": "تسمية الإحصاء 2",
+    "stat_2_value": "قيمة الإحصاء 2",
+    "stat_3_label": "تسمية الإحصاء 3",
+    "stat_3_value": "قيمة الإحصاء 3",
+    "subheading": "العنوان الفرعي",
+    "use_page_content": "استخدام محتوى الصفحة",
+    "value_1_copy": "نص القيمة 1",
+    "value_1_title": "عنوان القيمة 1",
+    "value_2_copy": "نص القيمة 2",
+    "value_2_title": "عنوان القيمة 2",
+    "value_3_copy": "نص القيمة 3",
+    "value_3_title": "عنوان القيمة 3"
+  },
+  "options": {
+    "alignment": {
+      "left": "يسار",
+      "center": "وسط",
+      "right": "يمين"
+    },
+    "direction": {
+      "horizontal": "أفقي",
+      "vertical": "عمودي"
+    },
+    "page_width": {
+      "narrow": "ضيّق",
+      "wide": "واسع"
+    },
+    "size": {
+      "large": "كبير",
+      "small": "صغير"
+    },
+    "text_style": {
+      "title": "عنوان",
+      "subtitle": "عنوان فرعي",
+      "normal": "نص عادي"
+    }
+  },
+  "sections": {
+    "refund_policy": {
+      "name": "سياسة الاسترجاع",
+      "preset": "سياسة الاسترجاع",
+      "settings_header_policy": "إعدادات السياسة",
+      "settings_header_contact": "بيانات الدعم",
+      "return_window_days_label": "مدة الإرجاع (بالأيام)",
+      "processing_min_days_label": "معالجة الاسترداد (الحد الأدنى بالأيام)",
+      "processing_max_days_label": "معالجة الاسترداد (الحد الأقصى بالأيام)",
+      "final_sale_note_label": "ملاحظة البيع النهائي (اختياري)",
+      "support_email_label": "بريد الدعم",
+      "support_phone_label": "هاتف الدعم (اختياري)",
+      "support_whatsapp_label": "رابط واتساب (اختياري)"
+    },
+    "shipping_policy": {
+      "name": "سياسة الشحن",
+      "preset": "سياسة الشحن",
+      "settings_header_shipping": "إعدادات الشحن",
+      "settings_header_contact": "تفاصيل التواصل",
+      "shipping_region_label": "منطقة الشحن",
+      "free_shipping_label": "تقديم شحن مجاني",
+      "handling_min_days_label": "مدة التجهيز (الحد الأدنى بالأيام)",
+      "handling_max_days_label": "مدة التجهيز (الحد الأقصى بالأيام)",
+      "transit_min_days_label": "مدة النقل (الحد الأدنى بالأيام)",
+      "transit_max_days_label": "مدة النقل (الحد الأقصى بالأيام)",
+      "cutoff_time_label": "وقت إغلاق الطلبات",
+      "support_email_label": "بريد الدعم",
+      "support_phone_label": "هاتف الدعم (اختياري)",
+      "support_address_label": "العنوان (اختياري)"
+    },
+    "terms_of_service": {
+      "name": "شروط الخدمة",
+      "preset": "شروط الخدمة",
+      "settings_header_contact": "تفاصيل التواصل",
+      "support_email_label": "بريد الدعم",
+      "support_phone_label": "هاتف الدعم (اختياري)",
+      "support_address_label": "العنوان (اختياري)"
+    },
+    "privacy_policy": {
+      "name": "سياسة الخصوصية",
+      "preset": "سياسة الخصوصية",
+      "settings_header_contact": "تفاصيل التواصل",
+      "support_email_label": "بريد الدعم",
+      "support_phone_label": "هاتف الدعم (اختياري)",
+      "support_address_label": "العنوان (اختياري)"
+    }
+  }
+}
+
+

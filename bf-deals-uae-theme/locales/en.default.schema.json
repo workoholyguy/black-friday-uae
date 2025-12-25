@@ -17,7 +17,9 @@
     "footer": "Footer",
     "group": "Group",
     "header": "Header",
+    "branding": "Branding",
     "layout": "Layout",
+    "login": "Login",
     "main": "Main",
     "page": "Page",
     "password": "Password",
@@ -36,6 +38,8 @@
   },
   "labels": {
     "alignment": "Alignment",
+    "favicon": "Favicon",
+    "apple_touch_icon": "Apple touch icon",
     "background": "Background",
     "foreground": "Foreground",
     "grid_gap": "Grid spacing",

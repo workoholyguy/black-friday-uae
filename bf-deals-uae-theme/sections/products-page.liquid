@@ -1,661 +1,871 @@
 {% comment %}
-    Products page section (used by templates/page.products.json).
-                
-                  This renders a product grid for a chosen collection. If none is selected,
-                  it falls back to the built-in "All products" collection.
+  Products page section (used by templates/page.products.json).
+
+                This renders a product grid for a chosen collection. If none is selected,
+                it falls back to the built-in "All products" collection.
 {% endcomment %}
 
 {% liquid
   assign list_collection = section.settings.collection
   if list_collection == blank
-    assign list_collection = collections['all']
-  endif %}
+    assign list_collection = collections.all
+  endif
+%}
 
-<section class="products-page" style="
-                                    --products-pad-top: {{ section.settings.padding_top }}px;
-                                    --products-pad-bottom: {{ section.settings.padding_bottom }}px;
-                                    --products-gap: {{ section.settings.gap }}px;
-                                    --products-columns-desktop: {{ section.settings.columns_desktop }};
-                                    --products-columns-mobile: {{ section.settings.columns_mobile }};
-                                  ">
-    <header class="products-page__header">
-        <h1 class="products-page__title">
-            {% if section.settings.heading != blank %}
-                {{ section.settings.heading | escape }}
-            {% else %}
-                {{ 'products_page.title' | t }}
-            {% endif %}
-        </h1>
-        {% if section.settings.subheading != blank %}
-            <p class="products-page__subheading">{{ section.settings.subheading | escape }}</p>
-        {% else %}
-            <p class="products-page__subheading">{{ 'products_page.subtitle' | t }}</p>
-        {% endif %}
-    </header>
+<section
+  class="products-page"
+  style="
+    --products-pad-top: {{ section.settings.padding_top }}px;
+    --products-pad-bottom: {{ section.settings.padding_bottom }}px;
+    --products-gap: {{ section.settings.gap }}px;
+    --products-columns-desktop: {{ section.settings.columns_desktop }};
+    --products-columns-mobile: {{ section.settings.columns_mobile }};
+  "
+>
+  <header class="products-page__header">
+    <h1 class="products-page__title">
+      {% if section.settings.heading != blank %}
+        {{ section.settings.heading | escape }}
+      {% else %}
+        {{ 'products_page.title' | t }}
+      {% endif %}
+    </h1>
+    {% if section.settings.subheading != blank %}
+      <p class="products-page__subheading">{{ section.settings.subheading | escape }}</p>
+    {% else %}
+      <p class="products-page__subheading">{{ 'products_page.subtitle' | t }}</p>
+    {% endif %}
 
-    {% if list_collection != blank and list_collection.products_count > 0 %}
-        {% paginate list_collection.products by section.settings.products_per_page %}
+    <div class="products-page__controls">
+      <label class="products-page__sort-label" for="ProductsSort-{{ section.id }}">
+        {{ 'products_page.sort.label' | t }}
+      </label>
+      <select id="ProductsSort-{{ section.id }}" class="products-page__sort" data-products-sort>
+        <option value="featured">{{ 'products_page.sort.featured' | t }}</option>
+        <option value="best_selling">{{ 'products_page.sort.best_selling' | t }}</option>
+        <option value="alpha_az">{{ 'products_page.sort.alpha_az' | t }}</option>
+        <option value="alpha_za">{{ 'products_page.sort.alpha_za' | t }}</option>
+        <option value="price_asc">{{ 'products_page.sort.price_asc' | t }}</option>
+        <option value="price_desc">{{ 'products_page.sort.price_desc' | t }}</option>
+        <option value="date_asc">{{ 'products_page.sort.date_asc' | t }}</option>
+        <option value="date_desc">{{ 'products_page.sort.date_desc' | t }}</option>
+      </select>
+    </div>
+  </header>
 
-            {% comment %}
-                <ul style="margin-bottom: 1rem; font-size: 0.9rem; opacity: .7;">
-                                                                <li>
-                                                                    <strong>Debug — product types in this collection:</strong>
-                                                                </li>
-                                                                {% for product in list_collection.products %}
-                                                                    <li>{{ product.title | escape }}
-                                                                        — [{{ product.type | default: 'NO TYPE' | escape }}]</li>
-                                                                {% else %}
-                                                                    <li>No products found.</li>
-                                                                {% endfor %}
-                                                            </ul>
-            {% endcomment %}
+  {% if list_collection != blank and list_collection.products_count > 0 %}
+    {% paginate list_collection.products by section.settings.products_per_page %}
+      {% comment %}
+        <ul style="margin-bottom: 1rem; font-size: 0.9rem; opacity: .7;">
+                                                        <li>
+                                                            <strong>Debug — product types in this collection:</strong>
+                                                        </li>
+                                                        {% for product in list_collection.products %}
+                                                            <li>{{ product.title | escape }}
+                                                                — [{{ product.type | default: 'NO TYPE' | escape }}]</li>
+                                                        {% else %}
+                                                            <li>No products found.</li>
+                                                        {% endfor %}
+                                                    </ul>
+      {% endcomment %}
 
-            <div class="products-page__layout" data-products-layout>
-                <aside class="products-page__sidebar" aria-label="{{ 'products_page.filters.title' | t }}">
-                    <div class="products-page__sidebar-inner">
-                        <div class="products-page__sidebar-head">
-                            <p class="products-page__sidebar-title">{{ 'products_page.filters.title' | t }}</p>
-                            <div class="products-page__sidebar-actions">
-                                <button class="products-page__toggle" type="button" data-filters-toggle aria-expanded="true" aria-controls="ProductsSidebarBody-{{ section.id }}" data-text-minimize="{{ 'products_page.filters.minimize' | t | escape }}" data-text-maximize="{{ 'products_page.filters.maximize' | t | escape }}">
-                                    {{ 'products_page.filters.minimize' | t }}
-                                </button>
-                                <button class="products-page__clear" type="button" data-filters-clear>
-                                    {{ 'products_page.filters.clear' | t }}
-                                </button>
-                            </div>
-                        </div>
+      <div class="products-page__layout" data-products-layout>
+        <aside class="products-page__sidebar" aria-label="{{ 'products_page.filters.title' | t }}">
+          <div class="products-page__sidebar-inner">
+            <div class="products-page__sidebar-head">
+              <p class="products-page__sidebar-title">{{ 'products_page.filters.title' | t }}</p>
+              <div class="products-page__sidebar-actions">
+                <button
+                  class="products-page__toggle"
+                  type="button"
+                  data-filters-toggle
+                  aria-expanded="true"
+                  aria-controls="ProductsSidebarBody-{{ section.id }}"
+                  data-text-minimize="{{ 'products_page.filters.minimize' | t | escape }}"
+                  data-text-maximize="{{ 'products_page.filters.maximize' | t | escape }}"
+                >
+                  {{ 'products_page.filters.minimize' | t }}
+                </button>
+                <button class="products-page__clear" type="button" data-filters-clear>
+                  {{ 'products_page.filters.clear' | t }}
+                </button>
+              </div>
+            </div>
 
-                        <div id="ProductsSidebarBody-{{ section.id }}" class="products-page__sidebar-body">
-                            <div class="products-page__field">
-                                <label class="products-page__label" for="ProductsSearch-{{ section.id }}">
-                                    {{ 'products_page.filters.search' | t }}
-                                </label>
-                                <input id="ProductsSearch-{{ section.id }}" class="products-page__input" type="search" placeholder="{{ 'products_page.filters.search_placeholder' | t }}" data-filter-search></div>
+            <div id="ProductsSidebarBody-{{ section.id }}" class="products-page__sidebar-body">
+              <div class="products-page__field">
+                <label class="products-page__label" for="ProductsSearch-{{ section.id }}">
+                  {{ 'products_page.filters.search' | t }}
+                </label>
+                <input
+                  id="ProductsSearch-{{ section.id }}"
+                  class="products-page__input"
+                  type="search"
+                  placeholder="{{ 'products_page.filters.search_placeholder' | t }}"
+                  data-filter-search
+                >
+              </div>
 
-                                {%- comment -%}
-                                    Category filter based on product type
-                                {%- endcomment -%}
-                                <div class="products-page__group" role="group" aria-label="{{ 'products_page.filters.categories' | t }}">
-                                    <p class="products-page__label products-page__label--group">
-                                        {{ 'products_page.filters.categories' | t }}
-                                    </p>
+              {%- comment -%}
+                Category filter based on product type
+              {%- endcomment -%}
+              <div class="products-page__group" role="group" aria-label="{{ 'products_page.filters.categories' | t }}">
+                <p class="products-page__label products-page__label--group">
+                  {{ 'products_page.filters.categories' | t }}
+                </p>
 
-                                    {% assign types = '' | split: '' %}
+                {% assign types = '' | split: '' %}
 
-                                    {% for product in list_collection.products %}
-                                        {% if product.type != blank %}
-                                            {% assign type_array = product.type | split: '||' %}
-                                            {% assign types = types | concat: type_array %}
-                                        {% endif %}
-                                    {% endfor %}
+                {% for product in list_collection.products %}
+                  {% if product.type != blank %}
+                    {% assign type_array = product.type | split: '||' %}
+                    {% assign types = types | concat: type_array %}
+                  {% endif %}
+                {% endfor %}
 
-                                    {% assign unique_types = types | uniq | sort %}
+                {% assign unique_types = types | uniq | sort %}
 
-                                    {% if unique_types.size > 0 %}
-                                        {% for type in unique_types %}
-                                            <label class="products-page__check">
-                                                <input type="checkbox" value="{{ type | escape }}" data-filter-type>
-                                                    <span>{{ type | escape }}</span>
-                                                </label>
-                                            {% endfor %}
-                                        {% else %}
-                                            <p class="products-page__hint">{{ 'products_page.filters.categories_hint' | t }}</p>
-                                        {% endif %}
-                                    </div>
+                {% if unique_types.size > 0 %}
+                  {% for type in unique_types %}
+                    <label class="products-page__check">
+                      <input type="checkbox" value="{{ type | escape }}" data-filter-type>
+                      <span>{{ type | escape }}</span>
+                    </label>
+                  {% endfor %}
+                {% else %}
+                  <p class="products-page__hint">{{ 'products_page.filters.categories_hint' | t }}</p>
+                {% endif %}
+              </div>
 
-                                    <div class="products-page__group" role="group" aria-label="{{ 'products_page.filters.refine' | t }}">
-                                        <p class="products-page__label products-page__label--group">
-                                            {{ 'products_page.filters.refine' | t }}
-                                        </p>
-                                        <label class="products-page__check">
-                                            <input type="checkbox" value="in_stock" data-filter-stock>
-                                                <span>{{ 'products_page.filters.in_stock' | t }}</span>
-                                            </label>
-                                            <label class="products-page__check">
-                                                <input type="checkbox" value="on_sale" data-filter-sale>
-                                                    <span>{{ 'products_page.filters.on_sale' | t }}</span>
-                                                </label>
-                                            </div>
+              <div class="products-page__group" role="group" aria-label="{{ 'products_page.filters.refine' | t }}">
+                <p class="products-page__label products-page__label--group">
+                  {{ 'products_page.filters.refine' | t }}
+                </p>
+                <label class="products-page__check">
+                  <input type="checkbox" value="in_stock" data-filter-stock>
+                  <span>{{ 'products_page.filters.in_stock' | t }}</span>
+                </label>
+                <label class="products-page__check">
+                  <input type="checkbox" value="on_sale" data-filter-sale>
+                  <span>{{ 'products_page.filters.on_sale' | t }}</span>
+                </label>
+              </div>
 
-                                            <div class="products-page__group" role="group" aria-label="{{ 'products_page.filters.price' | t }}">
-                                                <p class="products-page__label products-page__label--group">
-                                                    {{ 'products_page.filters.price' | t }}
-                                                </p>
-                                                <div class="products-page__price-range">
-                                                    <div class="products-page__field">
-                                                        <label class="products-page__label" for="MinPrice-{{ section.id }}">
-                                                            {{ 'products_page.filters.min_price' | t }}
-                                                        </label>
-                                                        <input id="MinPrice-{{ section.id }}" class="products-page__input" type="number" min="0" step="1" inputmode="numeric" data-filter-min-price></div>
-                                                        <div class="products-page__field">
-                                                            <label class="products-page__label" for="MaxPrice-{{ section.id }}">
-                                                                {{ 'products_page.filters.max_price' | t }}
-                                                            </label>
-                                                            <input id="MaxPrice-{{ section.id }}" class="products-page__input" type="number" min="0" step="1" inputmode="numeric" data-filter-max-price></div>
-                                                        </div>
-                                                        <p class="products-page__hint">{{ 'products_page.filters.price_hint' | t }}</p>
-                                                    </div>
+              <div class="products-page__group" role="group" aria-label="{{ 'products_page.filters.price' | t }}">
+                <p class="products-page__label products-page__label--group">
+                  {{ 'products_page.filters.price' | t }}
+                </p>
+                <div class="products-page__price-range">
+                  <div class="products-page__field">
+                    <label class="products-page__label" for="MinPrice-{{ section.id }}">
+                      {{ 'products_page.filters.min_price' | t }}
+                    </label>
+                    <input
+                      id="MinPrice-{{ section.id }}"
+                      class="products-page__input"
+                      type="number"
+                      min="0"
+                      step="1"
+                      inputmode="numeric"
+                      data-filter-min-price
+                    >
+                  </div>
+                  <div class="products-page__field">
+                    <label class="products-page__label" for="MaxPrice-{{ section.id }}">
+                      {{ 'products_page.filters.max_price' | t }}
+                    </label>
+                    <input
+                      id="MaxPrice-{{ section.id }}"
+                      class="products-page__input"
+                      type="number"
+                      min="0"
+                      step="1"
+                      inputmode="numeric"
+                      data-filter-max-price
+                    >
+                  </div>
+                </div>
+                <p class="products-page__hint">{{ 'products_page.filters.price_hint' | t }}</p>
+              </div>
 
-                                                    <p class="products-page__count" aria-live="polite" data-results-count></p>
-                                                </div>
-                                            </div>
-                                        </aside>
+              <p class="products-page__count" aria-live="polite" data-results-count></p>
+            </div>
+          </div>
+        </aside>
 
-                                        <div class="products-page__main">
-                                            <div class="products-page__grid" role="list" data-products-grid>
-                                                {% for product in list_collection.products %}
-                                                    {% liquid
+        <div class="products-page__main">
+          <div class="products-page__grid" role="list" data-products-grid>
+            {% for product in list_collection.products %}
+              {% liquid
                 assign variant = product.selected_or_first_available_variant
                 assign on_sale = false
                 if variant.compare_at_price > variant.price
                   assign on_sale = true
                 endif
-                assign tags = product.tags | join: ',' %}
-                                                    <div role="listitem" data-product-item data-title="{{ product.title | strip_html | escape }}" data-vendor="{{ product.vendor | escape }}" data-tags="{{ tags | escape }}" data-type="{{ product.type | escape }}" data-available="{% if product.available %}true{% else %}false{% endif %}" data-on-sale="{% if on_sale %}true{% else %}false{% endif %}" data-price-cents="{{ variant.price }}">
-                                                        {% render 'product-card',
+                assign tags = product.tags | join: ','
+              %}
+              <div
+                role="listitem"
+                data-product-item
+                data-title="{{ product.title | strip_html | escape }}"
+                data-vendor="{{ product.vendor | escape }}"
+                data-tags="{{ tags | escape }}"
+                data-type="{{ product.type | escape }}"
+                data-available="{% if product.available %}true{% else %}false{% endif %}"
+                data-on-sale="{% if on_sale %}true{% else %}false{% endif %}"
+                data-price-cents="{{ variant.price }}"
+                data-published-at="{{ product.published_at | date: '%s' }}"
+              >
+                {% render 'product-card',
                   product: product,
                   show_vendor: section.settings.show_vendor,
-                  show_price: section.settings.show_price %}
-                                                    </div>
-                                                {% endfor %}
-                                            </div>
-                                        </div>
-                                    </div>
+                  show_price: section.settings.show_price
+                %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
 
-                                    <div class="products-page__pagination">
-                                        {{ paginate | default_pagination }}
-                                    </div>
-                                {% endpaginate %}
-                            {% else %}
-                                <p class="products-page__empty">{{ 'products_page.empty' | t }}</p>
-                            {% endif %}
-                        </section>
+      <div class="products-page__pagination">
+        {{ paginate | default_pagination }}
+      </div>
+    {% endpaginate %}
+  {% else %}
+    <p class="products-page__empty">{{ 'products_page.empty' | t }}</p>
+  {% endif %}
+</section>
 
-                        {% stylesheet %}
-                        .products-page {
-                                                                                                    padding-block: var(--products-pad-top) var(--products-pad-bottom);
-                                                                                                  }
-                                                                                                
-                                                                                                  .products-page__header {
-                                                                                                    display: grid;
-                                                                                                    gap: 10px;
-                                                                                                    margin-block-end: 18px;
-                                                                                                    text-align: center;
-                                                                                                  }
-                                                                                                
-                                                                                                  .products-page__title {
-                                                                                                    font-size: clamp(1.6rem, 2.8vw, 2.3rem);
-                                                                                                    letter-spacing: -0.02em;
-                                                                                                    line-height: 1.1;
-                                                                                                  }
-                                                                                                
-                                                                                                  .products-page__subheading {
-                                                                                                    opacity: 0.85;
-                                                                                                    line-height: 1.6;
-                                                                                                    max-width: 70ch;
-                                                                                                    margin-inline: auto;
-                                                                                                  }
-                                                                                                
-                                                                                                  .products-page__grid {
-                                                                                                    display: grid;
-                                                                                                    gap: var(--products-gap);
-                                                                                                    grid-template-columns: repeat(var(--products-columns-mobile), minmax(0, 1fr));
-                                                                                                  }
-                                                                                                
-                                                                                                  .products-page__layout {
-                                                                                                    display: grid;
-                                                                                                    gap: 18px;
-                                                                                                    align-items: start;
-                                                                                                  }
-                                                                                                
-                                                                                                  .products-page__sidebar {
-                                                                                                    border-radius: 18px;
-                                                                                                    border: 1px solid red;
-                                                                                                    background: color-mix(in srgb, var(--color-background) 96%, var(--color-foreground) 4%);
-                                                                                                    box-shadow: 0 14px 30px color-mix(in srgb, var(--color-foreground) 10%, transparent);
-                                                                                                  }
-                                                                                                
-                                                                                                  .products-page__sidebar-inner {
-                                                                                                    padding: 10px;
-                                                                                                    display: grid;
-                                                                                                    gap: 12px;
-                                                                                                  }
-                                                                                                
-                                                                                                  .products-page__sidebar-head {
-                                                                                                    display: flex;
-                                                                                                    align-items: baseline;
-                                                                                                    justify-content: space-between;
-                                                                                                    gap: 10px;
-                                                                                                  }
-                                                                                                
-                                                                                                  .products-page__sidebar-title {
-                                                                                                    font-weight: 800;
-                                                                                                    letter-spacing: -0.01em;
-                                                                                                  }
-                                                                                                
-                                                                                                  .products-page__sidebar-actions {
-                                                                                                    display: inline-flex;
-                                                                                                    gap: 8px;
-                                                                                                    align-items: center;
-                                                                                                  }
-                                                                                                
-                                                                                                  .products-page__toggle {
-                                                                                                    background: transparent;
-                                                                                                    border: 1px solid color-mix(in srgb, var(--color-foreground) 18%, transparent);
-                                                                                                    color: var(--color-foreground);
-                                                                                                    border-radius: 999px;
-                                                                                                    padding: 5px 9px;
-                                                                                                    cursor: pointer;
-                                                                                                    font-size: 0.92rem;
-                                                                                                    opacity: 0.9;
-                                                                                                  }
-                                                                                                
-                                                                                                  .products-page__toggle:hover {
-                                                                                                    opacity: 1;
-                                                                                                  }
-                                                                                                
-                                                                                                  .products-page__clear {
-                                                                                                    background: transparent;
-                                                                                                    border: 1px solid color-mix(in srgb, var(--color-foreground) 18%, transparent);
-                                                                                                    color: var(--color-foreground);
-                                                                                                    border-radius: 999px;
-                                                                                                    padding: 5px 9px;
-                                                                                                    cursor: pointer;
-                                                                                                    font-size: 0.92rem;
-                                                                                                    opacity: 0.9;
-                                                                                                  }
-                                                                                                
-                                                                                                  .products-page__clear:hover {
-                                                                                                    opacity: 1;
-                                                                                                  }
-                                                                                                
-                                                                                                  .products-page__field {
-                                                                                                    display: grid;
-                                                                                                    gap: 8px;
-                                                                                                  }
-                                                                                                
-                                                                                                  .products-page__label {
-                                                                                                    font-size: 0.92rem;
-                                                                                                    font-weight: 700;
-                                                                                                    opacity: 0.95;
-                                                                                                  }
-                                                                                                
-                                                                                                  .products-page__label--group {
-                                                                                                    margin-block-end: 2px;
-                                                                                                  }
-                                                                                                
-                                                                                                  .products-page__input {
-                                                                                                    width: 100%;
-                                                                                                    padding: 9px 10px;
-                                                                                                    border: 1px solid color-mix(in srgb, var(--color-foreground) 14%, transparent);
-                                                                                                    background: var(--color-background);
-                                                                                                    color: var(--color-foreground);
-                                                                                                    border-radius: 14px;
-                                                                                                  }
-                                                                                                
-                                                                                                  .products-page__group {
-                                                                                                    display: grid;
-                                                                                                    gap: 10px;
-                                                                                                    padding-block-start: 12px;
-                                                                                                    border-top: 1px solid color-mix(in srgb, var(--color-foreground) 10%, transparent);
-                                                                                                  }
-                                                                                                
-                                                                                                  .products-page__check {
-                                                                                                    display: grid;
-                                                                                                    grid-template-columns: 18px 1fr;
-                                                                                                    gap: 10px;
-                                                                                                    align-items: start;
-                                                                                                    font-size: 0.92rem;
-                                                                                                    opacity: 0.95;
-                                                                                                  }
-                                                                                                
-                                                                                                  .products-page__check input {
-                                                                                                    margin-block-start: 2px;
-                                                                                                  }
-                                                                                                
-                                                                                                  .products-page__price-range {
-                                                                                                    display: grid;
-                                                                                                    grid-template-columns: 1fr 1fr;
-                                                                                                    gap: 10px;
-                                                                                                  }
-                                                                                                
-                                                                                                  .products-page__hint {
-                                                                                                    font-size: 0.88rem;
-                                                                                                    opacity: 0.75;
-                                                                                                    line-height: 1.4;
-                                                                                                  }
-                                                                                                
-                                                                                                  .products-page__count {
-                                                                                                    font-size: 0.92rem;
-                                                                                                    opacity: 0.85;
-                                                                                                  }
-                                                                                                
-                                                                                                  .products-page--filters-collapsed .products-page__sidebar-body {
-                                                                                                    display: none;
-                                                                                                  }
-                                                                                                
-                                                                                                  .products-page--filters-collapsed .products-page__clear {
-                                                                                                    display: none;
-                                                                                                  }
-                                                                                                
-                                                                                                  .products-page__pagination {
-                                                                                                    margin-block-start: 18px;
-                                                                                                    display: flex;
-                                                                                                    justify-content: center;
-                                                                                                  }
-                                                                                                
-                                                                                                  .products-page__empty {
-                                                                                                    text-align: center;
-                                                                                                    opacity: 0.85;
-                                                                                                    margin-block-start: 22px;
-                                                                                                  }
-                                                                                                
-                                                                                                  @media (min-width: 750px) {
-                                                                                                    .products-page__layout {
-                                                                                                      grid-template-columns: minmax(220px, 260px) 1fr;
-                                                                                                    }
-                                                                                                
-                                                                                                    .products-page__sidebar {
-                                                                                                      position: sticky;
-                                                                                                      top: 18px;
-                                                                                                      align-self: start;
-                                                                                                    }
-                                                                                                
-                                                                                                    .products-page__grid {
-                                                                                                      grid-template-columns: repeat(var(--products-columns-desktop), minmax(0, 1fr));
-                                                                                                    }
-                                                                                                
-                                                                                                    .products-page--filters-collapsed .products-page__layout {
-                                                                                                      grid-template-columns: 72px 1fr;
-                                                                                                    }
-                                                                                                
-                                                                                                    .products-page--filters-collapsed .products-page__sidebar-inner {
-                                                                                                      padding: 10px 8px;
-                                                                                                    }
-                                                                                                
-                                                                                                    .products-page--filters-collapsed .products-page__sidebar-title {
-                                                                                                      display: none;
-                                                                                                    }
-                                                                                                
-                                                                                                    .products-page--filters-collapsed .products-page__sidebar-actions {
-                                                                                                      width: 100%;
-                                                                                                      justify-content: center;
-                                                                                                    }
-                                                                                                  }
-                                                                                                
-                                                                                                  @media (prefers-reduced-motion: reduce) {
-                                                                                                    /* product card handles reduced motion internally */
-                                                                                                  }
-                        {% endstylesheet %}
+{% stylesheet %}
+  .products-page {
+    padding-block: var(--products-pad-top) var(--products-pad-bottom);
+  }
 
-                        {% javascript %}
-                        function normalizeText(value) {
-                                                                                                    return (value || '').toString().toLowerCase().trim()
-                                                                                                  }
-                                                                                                
-                                                                                                  function parseNumber(value) {
-                                                                                                    if (value === null || value === undefined) return null
-                                                                                                    const s = value.toString().trim()
-                                                                                                    if (s === '') return null
-                                                                                                    const n = Number(s)
-                                                                                                    return Number.isFinite(n) ? n : null
-                                                                                                  }
-                                                                                                
-                                                                                                  function initProductsPageFilters(sectionRoot) {
-                                                                                                    const items = Array.from(sectionRoot.querySelectorAll('[data-product-item]'))
-                                                                                                    if (items.length === 0) return
-                                                                                                
-                                                                                                    const layout = sectionRoot.querySelector('[data-products-layout]')
-                                                                                                    const toggle = sectionRoot.querySelector('[data-filters-toggle]')
-                                                                                                    const search = sectionRoot.querySelector('[data-filter-search]')
-                                                                                                    const typeChecks = Array.from(sectionRoot.querySelectorAll('[data-filter-type]'))
-                                                                                                    const tagChecks = Array.from(sectionRoot.querySelectorAll('[data-filter-tag]'))
-                                                                                                    const stock = sectionRoot.querySelector('[data-filter-stock]')
-                                                                                                    const sale = sectionRoot.querySelector('[data-filter-sale]')
-                                                                                                    const minPrice = sectionRoot.querySelector('[data-filter-min-price]')
-                                                                                                    const maxPrice = sectionRoot.querySelector('[data-filter-max-price]')
-                                                                                                    const clear = sectionRoot.querySelector('[data-filters-clear]')
-                                                                                                    const count = sectionRoot.querySelector('[data-results-count]')
-                                                                                                
-                                                                                                    const storageKey = `products_page_filters_collapsed:${sectionRoot.id || ''}`
-                                                                                                
-                                                                                                    function setCollapsed(isCollapsed) {
-                                                                                                      sectionRoot.classList.toggle('products-page--filters-collapsed', isCollapsed)
-                                                                                                
-                                                                                                      if (toggle) {
-                                                                                                        toggle.setAttribute('aria-expanded', (!isCollapsed).toString())
-                                                                                                        const textMin = toggle.dataset.textMinimize || 'Minimize'
-                                                                                                        const textMax = toggle.dataset.textMaximize || 'Maximize'
-                                                                                                        toggle.textContent = isCollapsed ? textMax : textMin
-                                                                                                      }
-                                                                                                
-                                                                                                      try {
-                                                                                                        localStorage.setItem(storageKey, isCollapsed ? '1' : '0')
-                                                                                                      } catch (e) {}
-                                                                                                    }
-                                                                                                
-                                                                                                    function getCollapsedFromStorage() {
-                                                                                                      try {
-                                                                                                        return localStorage.getItem(storageKey) === '1'
-                                                                                                      } catch (e) {
-                                                                                                        return false
-                                                                                                      }
-                                                                                                    }
-                                                                                                
-                                                                                                    function getSelectedTypes() {
-                                                                                                      return typeChecks.filter((c) => c.checked).map((c) => c.value)
-                                                                                                    }
-                                                                                                
-                                                                                                    function getSelectedTags() {
-                                                                                                      return tagChecks.filter((c) => c.checked).map((c) => c.value)
-                                                                                                    }
-                                                                                                
-                                                                                                    function matchesTypes(item, selectedTypes) {
-                                                                                                      if (selectedTypes.length === 0) return true
-                                                                                                      const type = normalizeText(item.dataset.type || '')
-                                                                                                      const selected = selectedTypes.map((t) => normalizeText(t))
-                                                                                                      return selected.includes(type)
-                                                                                                    }
-                                                                                                
-                                                                                                    function matchesTags(item, selectedTags) {
-                                                                                                      if (selectedTags.length === 0) return true
-                                                                                                      const tagsRaw = item.dataset.tags || ''
-                                                                                                      const tagList = tagsRaw
-                                                                                                        .split(',')
-                                                                                                        .map((t) => normalizeText(t))
-                                                                                                        .filter(Boolean)
-                                                                                                
-                                                                                                      const selected = selectedTags.map((t) => normalizeText(t))
-                                                                                                      for (const t of selected) {
-                                                                                                        if (tagList.includes(t)) return true
-                                                                                                      }
-                                                                                                      return false
-                                                                                                    }
-                                                                                                
-                                                                                                    function applyFilters() {
-                                                                                                      const q = normalizeText(search?.value)
-                                                                                                      const selectedTypes = getSelectedTypes()
-                                                                                                      const selectedTags = getSelectedTags()
-                                                                                                      const onlyInStock = !!stock?.checked
-                                                                                                      const onlyOnSale = !!sale?.checked
-                                                                                                
-                                                                                                      const min = parseNumber(minPrice?.value)
-                                                                                                      const max = parseNumber(maxPrice?.value)
-                                                                                                
-                                                                                                      let visible = 0
-                                                                                                      for (const item of items) {
-                                                                                                        const title = normalizeText(item.dataset.title)
-                                                                                                        const vendor = normalizeText(item.dataset.vendor)
-                                                                                                        const available = item.dataset.available === 'true'
-                                                                                                        const onSale = item.dataset.onSale === 'true'
-                                                                                                        const priceCents = parseNumber(item.dataset.priceCents)
-                                                                                                
-                                                                                                        let ok = true
-                                                                                                
-                                                                                                        if (q) {
-                                                                                                          if (!title.includes(q) && !vendor.includes(q)) ok = false
-                                                                                                        }
-                                                                                                
-                                                                                                        if (ok && !matchesTypes(item, selectedTypes)) ok = false
-                                                                                                        if (ok && !matchesTags(item, selectedTags)) ok = false
-                                                                                                        if (ok && onlyInStock && !available) ok = false
-                                                                                                        if (ok && onlyOnSale && !onSale) ok = false
-                                                                                                
-                                                                                                        if (ok && priceCents !== null) {
-                                                                                                          if (min !== null && priceCents < min * 100) ok = false
-                                                                                                          if (max !== null && priceCents > max * 100) ok = false
-                                                                                                        }
-                                                                                                
-                                                                                                        item.style.display = ok ? '' : 'none'
-                                                                                                        if (ok) visible += 1
-                                                                                                      }
-                                                                                                
-                                                                                                      if (count) {
-                                                                                                        count.textContent = `${visible} / ${items.length}`
-                                                                                                      }
-                                                                                                    }
-                                                                                                
-                                                                                                    function clearFilters() {
-                                                                                                      if (search) search.value = ''
-                                                                                                      for (const c of typeChecks) c.checked = false
-                                                                                                      for (const c of tagChecks) c.checked = false
-                                                                                                      if (stock) stock.checked = false
-                                                                                                      if (sale) sale.checked = false
-                                                                                                      if (minPrice) minPrice.value = ''
-                                                                                                      if (maxPrice) maxPrice.value = ''
-                                                                                                      applyFilters()
-                                                                                                    }
-                                                                                                
-                                                                                                    if (toggle) {
-                                                                                                      toggle.addEventListener('click', () => {
-                                                                                                        const next = !sectionRoot.classList.contains('products-page--filters-collapsed')
-                                                                                                        setCollapsed(next)
-                                                                                                      })
-                                                                                                    }
-                                                                                                
-                                                                                                    const handlers = [search, stock, sale, minPrice, maxPrice, clear, ...typeChecks, ...tagChecks].filter(Boolean)
-                                                                                                    for (const el of handlers) {
-                                                                                                      const evt = el === clear ? 'click' : 'input'
-                                                                                                      el.addEventListener(evt, () => {
-                                                                                                        if (el === clear) clearFilters()
-                                                                                                        else applyFilters()
-                                                                                                      })
-                                                                                                      if (el.tagName === 'INPUT' && el.type === 'checkbox') {
-                                                                                                        el.addEventListener('change', applyFilters)
-                                                                                                      }
-                                                                                                    }
-                                                                                                
-                                                                                                    setCollapsed(getCollapsedFromStorage())
-                                                                                                    applyFilters()
-                                                                                                  }
-                                                                                                
-                                                                                                  function initAllProductsPages() {
-                                                                                                    document.querySelectorAll('.products-page').forEach((root) => initProductsPageFilters(root))
-                                                                                                  }
-                                                                                                
-                                                                                                  if (document.readyState === 'loading') {
-                                                                                                    document.addEventListener('DOMContentLoaded', initAllProductsPages)
-                                                                                                  } else {
-                                                                                                    initAllProductsPages()
-                                                                                                  }
-                        {% endjavascript %}
+  .products-page__header {
+    display: grid;
+    gap: 10px;
+    margin-block-end: 18px;
+    text-align: center;
+  }
+  .products-page__controls {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: end;
+    margin-block-start: 6px;
+    flex-wrap: wrap;
+  }
+  .products-page__sort-label {
+    font-size: 0.95rem;
+    font-weight: 700;
+    opacity: 0.9;
+  }
+  .products-page__sort {
+    min-width: 200px;
+    padding: 9px 12px;
+    border-radius: 14px;
+    border: 1px solid color-mix(in srgb, var(--color-foreground) 16%, transparent);
+    background: var(--color-background);
+    color: var(--color-foreground);
+  }
 
-                        {% schema %}
-                        {
-                                                                                                  "name": "Products page",
-                                                                                                  "settings": [
-                                                                                                    {
-                                                                                                      "type": "text",
-                                                                                                      "id": "heading",
-                                                                                                      "label": "Heading",
-                                                                                                      "default": "Products"
-                                                                                                    },
-                                                                                                    {
-                                                                                                      "type": "text",
-                                                                                                      "id": "subheading",
-                                                                                                      "label": "Subheading",
-                                                                                                      "default": "Browse our collection and find the best deals available right now."
-                                                                                                    },
-                                                                                                    {
-                                                                                                      "type": "collection",
-                                                                                                      "id": "collection",
-                                                                                                      "label": "Collection (default: all products)"
-                                                                                                    },
-                                                                                                    {
-                                                                                                      "type": "range",
-                                                                                                      "id": "products_per_page",
-                                                                                                      "label": "Products per page",
-                                                                                                      "min": 8,
-                                                                                                      "max": 48,
-                                                                                                      "step": 4,
-                                                                                                      "default": 24
-                                                                                                    },
-                                                                                                    {
-                                                                                                      "type": "range",
-                                                                                                      "id": "gap",
-                                                                                                      "label": "Grid gap",
-                                                                                                      "min": 8,
-                                                                                                      "max": 40,
-                                                                                                      "step": 2,
-                                                                                                      "unit": "px",
-                                                                                                      "default": 16
-                                                                                                    },
-                                                                                                    {
-                                                                                                      "type": "range",
-                                                                                                      "id": "columns_desktop",
-                                                                                                      "label": "Columns (desktop)",
-                                                                                                      "min": 2,
-                                                                                                      "max": 5,
-                                                                                                      "step": 1,
-                                                                                                      "default": 4
-                                                                                                    },
-                                                                                                    {
-                                                                                                      "type": "select",
-                                                                                                      "id": "columns_mobile",
-                                                                                                      "label": "Columns (mobile)",
-                                                                                                      "options": [
-                                                                                                        { "value": "1", "label": "1" },
-                                                                                                        { "value": "2", "label": "2" }
-                                                                                                      ],
-                                                                                                      "default": "2"
-                                                                                                    },
-                                                                                                    {
-                                                                                                      "type": "checkbox",
-                                                                                                      "id": "show_vendor",
-                                                                                                      "label": "Show vendor",
-                                                                                                      "default": false
-                                                                                                    },
-                                                                                                    {
-                                                                                                      "type": "checkbox",
-                                                                                                      "id": "show_price",
-                                                                                                      "label": "Show price",
-                                                                                                      "default": true
-                                                                                                    },
-                                                                                                    {
-                                                                                                      "type": "range",
-                                                                                                      "id": "padding_top",
-                                                                                                      "label": "Padding top",
-                                                                                                      "min": 0,
-                                                                                                      "max": 120,
-                                                                                                      "step": 4,
-                                                                                                      "unit": "px",
-                                                                                                      "default": 28
-                                                                                                    },
-                                                                                                    {
-                                                                                                      "type": "range",
-                                                                                                      "id": "padding_bottom",
-                                                                                                      "label": "Padding bottom",
-                                                                                                      "min": 0,
-                                                                                                      "max": 120,
-                                                                                                      "step": 4,
-                                                                                                      "unit": "px",
-                                                                                                      "default": 36
-                                                                                                    }
-                                                                                                  ],
-                                                                                                  "presets": [
-                                                                                                    {
-                                                                                                      "name": "Products page"
-                                                                                                    }
-                                                                                                  ]
-                                                                                                }
-                        {% endschema %}
+  .products-page__title {
+    font-size: clamp(1.6rem, 2.8vw, 2.3rem);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  .products-page__subheading {
+    opacity: 0.85;
+    line-height: 1.6;
+    max-width: 70ch;
+    margin-inline: auto;
+  }
+
+  .products-page__grid {
+    display: grid;
+    gap: var(--products-gap);
+    grid-template-columns: repeat(var(--products-columns-mobile), minmax(0, 1fr));
+  }
+
+  .products-page__layout {
+    display: grid;
+    gap: 18px;
+    align-items: start;
+  }
+
+  .products-page__sidebar {
+    border-radius: 18px;
+    border: 1px solid color-mix(in srgb, var(--color-foreground) 12%, transparent);
+    background: color-mix(in srgb, var(--color-background) 96%, var(--color-foreground) 4%);
+    box-shadow: 0 14px 30px color-mix(in srgb, var(--color-foreground) 10%, transparent);
+  }
+
+  .products-page__sidebar-inner {
+    padding: 10px;
+    display: grid;
+    gap: 12px;
+  }
+
+  .products-page__sidebar-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .products-page__sidebar-title {
+    font-weight: 800;
+    letter-spacing: -0.01em;
+  }
+
+  .products-page__sidebar-actions {
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .products-page__toggle {
+    background: transparent;
+    border: 1px solid color-mix(in srgb, var(--color-foreground) 18%, transparent);
+    color: var(--color-foreground);
+    border-radius: 999px;
+    padding: 5px 9px;
+    cursor: pointer;
+    font-size: 0.92rem;
+    opacity: 0.9;
+  }
+
+  .products-page__toggle:hover {
+    opacity: 1;
+  }
+
+  .products-page__clear {
+    background: transparent;
+    border: 1px solid color-mix(in srgb, var(--color-foreground) 18%, transparent);
+    color: var(--color-foreground);
+    border-radius: 999px;
+    padding: 5px 9px;
+    cursor: pointer;
+    font-size: 0.92rem;
+    opacity: 0.9;
+  }
+
+  .products-page__clear:hover {
+    opacity: 1;
+  }
+
+  .products-page__field {
+    display: grid;
+    gap: 8px;
+  }
+
+  .products-page__label {
+    font-size: 0.92rem;
+    font-weight: 700;
+    opacity: 0.95;
+  }
+
+  .products-page__label--group {
+    margin-block-end: 2px;
+  }
+
+  .products-page__input {
+    width: 100%;
+    padding: 9px 10px;
+    border: 1px solid color-mix(in srgb, var(--color-foreground) 14%, transparent);
+    background: var(--color-background);
+    color: var(--color-foreground);
+    border-radius: 14px;
+  }
+
+  .products-page__group {
+    display: grid;
+    gap: 10px;
+    padding-block-start: 12px;
+    border-top: 1px solid color-mix(in srgb, var(--color-foreground) 10%, transparent);
+  }
+
+  .products-page__check {
+    display: grid;
+    grid-template-columns: 18px 1fr;
+    gap: 10px;
+    align-items: start;
+    font-size: 0.92rem;
+    opacity: 0.95;
+  }
+
+  .products-page__check input {
+    margin-block-start: 2px;
+  }
+
+  .products-page__price-range {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .products-page__hint {
+    font-size: 0.88rem;
+    opacity: 0.75;
+    line-height: 1.4;
+  }
+
+  .products-page__count {
+    font-size: 0.92rem;
+    opacity: 0.85;
+  }
+
+  .products-page--filters-collapsed .products-page__sidebar-body {
+    display: none;
+  }
+
+  .products-page--filters-collapsed .products-page__clear {
+    display: none;
+  }
+
+  .products-page__pagination {
+    margin-block-start: 18px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .products-page__empty {
+    text-align: center;
+    opacity: 0.85;
+    margin-block-start: 22px;
+  }
+
+  @media (max-width: 750px) {
+    .products-page {
+      padding-inline: var(--page-margin);
+    }
+    .products-page__layout {
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+    .products-page__sidebar {
+      position: static;
+    }
+    .products-page__sidebar-head {
+      flex-wrap: wrap;
+    }
+    .products-page__sidebar-actions {
+      width: 100%;
+      justify-content: flex-start;
+      gap: 6px;
+    }
+    .products-page__grid {
+      grid-template-columns: repeat(var(--products-columns-mobile), minmax(0, 1fr));
+      gap: clamp(0.8rem, 3vw, 1.1rem);
+    }
+    .products-page__price-range {
+      grid-template-columns: 1fr;
+    }
+    .products-page__title {
+      font-size: clamp(1.4rem, 5vw, 1.8rem);
+    }
+    .products-page__subheading {
+      font-size: 0.98rem;
+      line-height: 1.5;
+    }
+    .products-page__controls {
+      justify-content: center;
+    }
+    .products-page__sort {
+      width: 100%;
+    }
+    .products-page__sidebar-inner {
+      padding: 12px;
+    }
+  }
+
+  @media (min-width: 750px) {
+    .products-page__layout {
+      grid-template-columns: minmax(220px, 260px) 1fr;
+    }
+
+    .products-page__sidebar {
+      position: sticky;
+      top: 18px;
+      align-self: start;
+    }
+
+    .products-page__grid {
+      grid-template-columns: repeat(var(--products-columns-desktop), minmax(0, 1fr));
+    }
+
+    .products-page--filters-collapsed .products-page__layout {
+      grid-template-columns: 72px 1fr;
+    }
+
+    .products-page--filters-collapsed .products-page__sidebar-inner {
+      padding: 10px 8px;
+    }
+
+    .products-page--filters-collapsed .products-page__sidebar-title {
+      display: none;
+    }
+
+    .products-page--filters-collapsed .products-page__sidebar-actions {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    /* product card handles reduced motion internally */
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  function normalizeText(value) {
+    return (value || '').toString().toLowerCase().trim();
+  }
+
+  function parseNumber(value) {
+    if (value === null || value === undefined) return null;
+    const s = value.toString().trim();
+    if (s === '') return null;
+    const n = Number(s);
+    return Number.isFinite(n) ? n : null;
+  }
+
+  function initProductsPageFilters(sectionRoot) {
+    const items = Array.from(sectionRoot.querySelectorAll('[data-product-item]'));
+    if (items.length === 0) return;
+
+    const layout = sectionRoot.querySelector('[data-products-layout]');
+    const sortSelect = sectionRoot.querySelector('[data-products-sort]');
+    const grid = sectionRoot.querySelector('[data-products-grid]');
+    const toggle = sectionRoot.querySelector('[data-filters-toggle]');
+    const search = sectionRoot.querySelector('[data-filter-search]');
+    const typeChecks = Array.from(sectionRoot.querySelectorAll('[data-filter-type]'));
+    const tagChecks = Array.from(sectionRoot.querySelectorAll('[data-filter-tag]'));
+    const stock = sectionRoot.querySelector('[data-filter-stock]');
+    const sale = sectionRoot.querySelector('[data-filter-sale]');
+    const minPrice = sectionRoot.querySelector('[data-filter-min-price]');
+    const maxPrice = sectionRoot.querySelector('[data-filter-max-price]');
+    const clear = sectionRoot.querySelector('[data-filters-clear]');
+    const count = sectionRoot.querySelector('[data-results-count]');
+
+    const storageKey = `products_page_filters_collapsed:${sectionRoot.id || ''}`;
+    const originalOrder = items.map((el, index) => ({ el, index }));
+
+    function setCollapsed(isCollapsed) {
+      sectionRoot.classList.toggle('products-page--filters-collapsed', isCollapsed);
+
+      if (toggle) {
+        toggle.setAttribute('aria-expanded', (!isCollapsed).toString());
+        const textMin = toggle.dataset.textMinimize || 'Minimize';
+        const textMax = toggle.dataset.textMaximize || 'Maximize';
+        toggle.textContent = isCollapsed ? textMax : textMin;
+      }
+
+      try {
+        localStorage.setItem(storageKey, isCollapsed ? '1' : '0');
+      } catch (e) {}
+    }
+
+    function getCollapsedFromStorage() {
+      try {
+        return localStorage.getItem(storageKey) === '1';
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function getSelectedTypes() {
+      return typeChecks.filter((c) => c.checked).map((c) => c.value);
+    }
+
+    function getSelectedTags() {
+      return tagChecks.filter((c) => c.checked).map((c) => c.value);
+    }
+
+    function matchesTypes(item, selectedTypes) {
+      if (selectedTypes.length === 0) return true;
+      const type = normalizeText(item.dataset.type || '');
+      const selected = selectedTypes.map((t) => normalizeText(t));
+      return selected.includes(type);
+    }
+
+    function matchesTags(item, selectedTags) {
+      if (selectedTags.length === 0) return true;
+      const tagsRaw = item.dataset.tags || '';
+      const tagList = tagsRaw
+        .split(',')
+        .map((t) => normalizeText(t))
+        .filter(Boolean);
+
+      const selected = selectedTags.map((t) => normalizeText(t));
+      for (const t of selected) {
+        if (tagList.includes(t)) return true;
+      }
+      return false;
+    }
+
+    function applyFilters() {
+      const q = normalizeText(search?.value);
+      const selectedTypes = getSelectedTypes();
+      const selectedTags = getSelectedTags();
+      const onlyInStock = !!stock?.checked;
+      const onlyOnSale = !!sale?.checked;
+
+      const min = parseNumber(minPrice?.value);
+      const max = parseNumber(maxPrice?.value);
+
+      let visible = 0;
+      for (const item of items) {
+        const title = normalizeText(item.dataset.title);
+        const vendor = normalizeText(item.dataset.vendor);
+        const available = item.dataset.available === 'true';
+        const onSale = item.dataset.onSale === 'true';
+        const priceCents = parseNumber(item.dataset.priceCents);
+
+        let ok = true;
+
+        if (q) {
+          if (!title.includes(q) && !vendor.includes(q)) ok = false;
+        }
+
+        if (ok && !matchesTypes(item, selectedTypes)) ok = false;
+        if (ok && !matchesTags(item, selectedTags)) ok = false;
+        if (ok && onlyInStock && !available) ok = false;
+        if (ok && onlyOnSale && !onSale) ok = false;
+
+        if (ok && priceCents !== null) {
+          if (min !== null && priceCents < min * 100) ok = false;
+          if (max !== null && priceCents > max * 100) ok = false;
+        }
+
+        item.style.display = ok ? '' : 'none';
+        if (ok) visible += 1;
+      }
+
+      if (count) {
+        count.textContent = `${visible} / ${items.length}`;
+      }
+    }
+
+    function sortItems(mode) {
+      if (!grid) return;
+      const sorted = [...items];
+      const cmpText = (a, b, dir = 1) =>
+        normalizeText(a.dataset.title || '').localeCompare(normalizeText(b.dataset.title || ''), undefined, {
+          sensitivity: 'base',
+        }) * dir;
+      const cmpNumber =
+        (key, dir = 1) =>
+        (a, b) => {
+          const av = Number(a.dataset[key] || 0);
+          const bv = Number(b.dataset[key] || 0);
+          if (av === bv) return 0;
+          return av > bv ? dir : -dir;
+        };
+
+      switch (mode) {
+        case 'alpha_az':
+          sorted.sort((a, b) => cmpText(a, b, 1));
+          break;
+        case 'alpha_za':
+          sorted.sort((a, b) => cmpText(a, b, -1));
+          break;
+        case 'price_asc':
+          sorted.sort(cmpNumber('priceCents', 1));
+          break;
+        case 'price_desc':
+          sorted.sort(cmpNumber('priceCents', -1));
+          break;
+        case 'date_asc':
+          sorted.sort(cmpNumber('publishedAt', 1));
+          break;
+        case 'date_desc':
+          sorted.sort(cmpNumber('publishedAt', -1));
+          break;
+        case 'best_selling':
+        case 'featured':
+        default:
+          sorted.sort((a, b) => {
+            const ao = originalOrder.find((o) => o.el === a)?.index || 0;
+            const bo = originalOrder.find((o) => o.el === b)?.index || 0;
+            return ao - bo;
+          });
+          break;
+      }
+
+      grid.append(...sorted);
+    }
+
+    function applyTypeFromUrl() {
+      let typesToSelect = [];
+      try {
+        const url = new URL(window.location.href);
+        const single = url.searchParams.get('type');
+        const multi = url.searchParams.get('types');
+        if (single) typesToSelect = [single];
+        if (multi) {
+          typesToSelect = multi
+            .split(',')
+            .map((t) => t.trim())
+            .filter(Boolean);
+        }
+      } catch (e) {}
+
+      if (typesToSelect.length === 0) return;
+      const normalized = typesToSelect.map((t) => normalizeText(t));
+      for (const c of typeChecks) {
+        c.checked = normalized.includes(normalizeText(c.value));
+      }
+    }
+
+    function clearFilters() {
+      if (search) search.value = '';
+      for (const c of typeChecks) c.checked = false;
+      for (const c of tagChecks) c.checked = false;
+      if (stock) stock.checked = false;
+      if (sale) sale.checked = false;
+      if (minPrice) minPrice.value = '';
+      if (maxPrice) maxPrice.value = '';
+      applyFilters();
+    }
+
+    if (toggle) {
+      toggle.addEventListener('click', () => {
+        const next = !sectionRoot.classList.contains('products-page--filters-collapsed');
+        setCollapsed(next);
+      });
+    }
+
+    const handlers = [search, stock, sale, minPrice, maxPrice, clear, ...typeChecks, ...tagChecks].filter(Boolean);
+    for (const el of handlers) {
+      const evt = el === clear ? 'click' : 'input';
+      el.addEventListener(evt, () => {
+        if (el === clear) clearFilters();
+        else applyFilters();
+      });
+      if (el.tagName === 'INPUT' && el.type === 'checkbox') {
+        el.addEventListener('change', applyFilters);
+      }
+    }
+
+    if (sortSelect) {
+      sortSelect.addEventListener('change', () => sortItems(sortSelect.value));
+    }
+
+    setCollapsed(getCollapsedFromStorage());
+    applyTypeFromUrl();
+    applyFilters();
+    if (sortSelect) sortItems(sortSelect.value || 'featured');
+  }
+
+  function initAllProductsPages() {
+    document.querySelectorAll('.products-page').forEach((root) => initProductsPageFilters(root));
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAllProductsPages);
+  } else {
+    initAllProductsPages();
+  }
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Products page",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Products"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Browse our collection and find the best deals available right now."
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection (default: all products)"
+    },
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "label": "Products per page",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Grid gap",
+      "min": 8,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Columns (desktop)",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "label": "Columns (mobile)",
+      "options": [
+        { "value": "1", "label": "1" },
+        { "value": "2", "label": "2" }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "Show vendor",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_price",
+      "label": "Show price",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 36
+    }
+  ],
+  "presets": [
+    {
+      "name": "Products page"
+    }
+  ]
+}
+{% endschema %}

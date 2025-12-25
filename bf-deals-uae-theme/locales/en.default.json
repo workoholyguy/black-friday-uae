@@ -16,15 +16,36 @@
   "cart": {
     "checkout": "Checkout",
     "title": "Cart",
-    "update": "Update",
-    "remove": "Remove"
+    "update": "Update cart",
+    "remove": "Remove",
+    "empty": "Your cart is empty.",
+    "empty_copy": "Browse deals and add your favorites — we’ll keep them here.",
+    "continue_shopping": "Continue shopping",
+    "items_in_cart_singular": "{{ count }} item in your cart",
+    "items_in_cart_plural": "{{ count }} items in your cart",
+    "summary": "Order summary",
+    "subtotal": "Subtotal",
+    "shipping_note": "Shipping and taxes calculated at checkout.",
+    "quantity": "Quantity",
+    "decrease_quantity": "Decrease quantity",
+    "increase_quantity": "Increase quantity",
+    "add_note": "Add a note",
+    "note_placeholder": "Add delivery instructions or a gift note (optional).",
+    "express_checkout": "Express checkout"
   },
   "customers": {
     "login": {
       "email": "Email",
       "password": "Password",
       "submit": "Sign in",
-      "title": "Login"
+      "title": "Login",
+      "subtitle": "Sign in to view your orders and manage your account.",
+      "forgot_password": "Forgot your password?",
+      "recover_title": "Reset your password",
+      "recover_submit": "Send reset email",
+      "recover_success": "If an account exists for this email, you’ll receive a reset link shortly.",
+      "create_account": "Create an account",
+      "return_to_store": "Return to store"
     }
   },
   "collections": {
@@ -52,7 +73,12 @@
   "navigation": {
     "categories": "Categories",
     "about": "About",
-    "products": "Products"
+    "products": "Products",
+    "home": "Home",
+    "brands": "Top brands",
+    "contact": "Contact us",
+    "main_aria": "Main navigation",
+    "secondary_aria": "Secondary navigation"
   },
   "contact": {
     "heading": "Contact us",
@@ -111,7 +137,9 @@
     "faq3_question": "Where do you operate?",
     "faq3_answer": "We support customers across UAE. Message us with your location and we’ll confirm timing and availability.",
     "faq4_question": "What should I include in my message?",
-    "faq4_answer": "Share your order number (if you have one), your phone number, and a clear description of what you need."
+    "faq4_answer": "Share your order number (if you have one), your phone number, and a clear description of what you need.",
+    "form_title": "Send a message",
+    "form_subtitle": "Leave your details and we’ll reply as soon as possible."
   },
   "about": {
     "eyebrow": "About",
@@ -136,6 +164,8 @@
   },
   "products": {
     "add_to_cart": "Add to cart",
+    "added_to_cart": "Added",
+    "add_to_cart_error": "Try again",
     "sale": "Sale",
     "sold_out": "Sold out",
     "quantity": "Quantity",
@@ -153,6 +183,17 @@
     "title": "Products",
     "subtitle": "Browse our collection and find the best deals available right now.",
     "empty": "No products found yet.",
+    "sort": {
+      "label": "Sort",
+      "featured": "Featured",
+      "best_selling": "Best selling",
+      "alpha_az": "Alphabetically, A-Z",
+      "alpha_za": "Alphabetically, Z-A",
+      "price_asc": "Price, low to high",
+      "price_desc": "Price, high to low",
+      "date_asc": "Date, old to new",
+      "date_desc": "Date, new to old"
+    },
     "filters": {
       "title": "Search & filter",
       "search": "Search",
@@ -180,13 +221,75 @@
       "kids_toddlers": "Kids & toddlers"
     }
   },
+  "home": {
+    "categories": {
+      "placeholder_title": "Category",
+      "choose_collection": "Choose collection",
+      "shop_now": "Shop now"
+    },
+    "general": {
+      "view_all": "View all"
+    },
+    "category_carousels": {
+      "pick_source": "Choose a categories menu (recommended) or select collections to show carousels here."
+    },
+    "type_carousels": {
+      "heading": "Shop by category",
+      "empty": "No products found yet.",
+      "no_types": "No product types found yet.",
+      "no_products_for_type": "No products found for this type yet."
+    },
+    "deals": {
+      "limited_stock": "Limited stock",
+      "fast_delivery_uae": "Fast delivery UAE",
+      "view_all": "View all",
+      "pick_collection": "Choose a collection in the theme editor to show deals here.",
+      "no_deals": "No discounted products found in this collection yet.",
+      "discount_badge_aria": "{{ percent }}% off"
+    },
+    "trust": {
+      "aria": "Trust signals",
+      "fast_delivery_uae": "Fast UAE delivery",
+      "easy_returns": "Easy returns",
+      "secure_checkout": "Secure checkout",
+      "local_support": "Local support"
+    },
+    "best_sellers": {
+      "view_all": "View all",
+      "pick_collection": "Choose a collection sorted by best selling in Shopify to show your top sellers here."
+    }
+  },
   "footer": {
-    "terms_of_service": "Terms of service"
+    "terms_of_service": "Terms of service",
+    "tagline": "Black Friday deals · Amazon returns in UAE",
+    "search": "Search",
+    "privacy_policy": "Privacy policy",
+    "refund_policy": "Refund policy",
+    "shipping_policy": "Shipping policy",
+    "social": {
+      "facebook": "Facebook",
+      "instagram": "Instagram",
+      "tiktok": "TikTok"
+    }
   },
   "legal": {
     "on_this_page": "On this page",
     "back_to_top": "Back to top",
     "toc_aria": "Table of contents"
+  },
+  "hello_world": {
+    "title": "Hello, world!",
+    "intro_1": "The Skeleton theme is a minimal, carefully structured Shopify theme designed to help you quickly get started. Designed with modularity, maintainability, and Shopify's best practices in mind.",
+    "intro_2": "Themes shape the online store experience for merchants and their customers. Build fast, flexible themes at scale using Liquid, Shopify's theme templating language, along with HTML, CSS, JavaScript, and JSON.",
+    "key_concepts_title": "Key concepts",
+    "key_concepts_copy": "Shopify themes are a package of template files, building blocks, and supporting assets. Use these building blocks to create modular, customizable themes.",
+    "key_concepts_link": "Learn more about key concepts",
+    "liquid_title": "Liquid",
+    "liquid_copy": "The Liquid templating language is the backbone of Shopify themes, and is used to load dynamic content on storefronts. Extend Liquid objects to store and present custom data using metafields.",
+    "liquid_link": "View the Liquid reference",
+    "best_practices_title": "Best practices",
+    "best_practices_copy": "To optimize your theme development experience, Shopify has established a set of best practices that you can refer to when developing your theme and setting up your toolchains and processes.",
+    "best_practices_link": "Follow best practices"
   },
   "refund_policy": {
     "title_fallback": "Refund policy",

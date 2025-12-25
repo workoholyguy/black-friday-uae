@@ -1,18 +1,40 @@
 <header class="site-header full-width">
+  {% liquid
+    assign locale_code = localization.language.iso_code | default: request.locale.iso_code | default: 'en'
+    assign locale_param = 'locale=' | append: locale_code
+  %}
   <div class="header__top">
     <div class="header__brand">
-      <a class="header__home" href="{{ routes.root_url }}" aria-label="{{ shop.name }}">
+      <a
+        class="header__home"
+        href="{{ routes.root_url | append: '?' | append: locale_param }}"
+        aria-label="{{ shop.name }}"
+      >
         {% if section.settings.logo != blank %}
           {{ section.settings.logo | image_url: width: 180 | image_tag: alt: shop.name, class: 'header__logo' }}
         {% else %}
-          <span class="header__title">{{ shop.name }}</span>
+          <img
+            class="header__logo"
+            src="{{ 'BFD UAE horizontal Logo 2.png' | asset_url }}"
+            alt="{{ shop.name | escape }}"
+            width="270"
+            height="52"
+            loading="eager"
+          >
         {% endif %}
       </a>
     </div>
 
     <div class="header__search">
       <form class="search-form" action="{{ routes.search_url }}" method="get" role="search">
-        <input class="search-input" type="search" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'search.placeholder' | t }}" aria-label="{{ 'search.title' | t }}">
+        <input
+          class="search-input"
+          type="search"
+          name="q"
+          value="{{ search.terms | escape }}"
+          placeholder="{{ 'search.placeholder' | t }}"
+          aria-label="{{ 'search.title' | t }}"
+        >
         <button class="search-submit" type="submit">{{ 'search.submit' | t }}</button>
       </form>
     </div>
@@ -20,9 +42,17 @@
     <div class="header__utilities">
       <div class="header__lang">
         {%- form 'localization', class: 'lang-form' -%}
-          <input type="hidden" name="locale_code" value="{% if localization.language.iso_code contains 'ar' %}en{% else %}ar{% endif %}">
+          <input
+            type="hidden"
+            name="locale_code"
+            value="{% if localization.language.iso_code contains 'ar' %}en{% else %}ar{% endif %}"
+          >
           <button type="submit" class="lang-button">
-            {% if localization.language.iso_code contains 'ar' %}English{% else %}العربية{% endif %}
+            {% if localization.language.iso_code contains 'ar' -%}
+              English
+            {%- else -%}
+              العربية
+            {% endif %}
           </button>
         {%- endform -%}
       </div>
@@ -30,7 +60,7 @@
         {% if shop.customer_accounts_enabled %}
           <a class="header__account" href="{{ routes.account_url }}">{{ 'customers.login.title' | t }}</a>
         {% endif %}
-        <a class="header__cart" href="{{ routes.cart_url }}" aria-label="{{ 'cart.title' | t }}">
+        <a class="header__cart" href="{{ routes.cart_url }}?{{ locale_param }}" aria-label="{{ 'cart.title' | t }}">
           {% if cart.item_count > 0 %}
             <sup>{{ cart.item_count }}</sup>
           {% endif %}
@@ -40,20 +70,20 @@
     </div>
   </div>
 
-  <div class="header__bottom" aria-label="Secondary">
-    <nav class="header__nav" aria-label="Main">
+  <div class="header__bottom" aria-label="{{ 'navigation.secondary_aria' | t | escape }}">
+    <nav class="header__nav" aria-label="{{ 'navigation.main_aria' | t | escape }}">
       {% liquid
         assign about_url = '/pages/about'
         assign products_url = routes.all_products_collection_url
         if section.settings.about_page != blank
           assign about_url = section.settings.about_page.url
         else
-          if pages['about'] != blank
-            assign about_url = pages['about'].url
+          if pages.about != blank
+            assign about_url = pages.about.url
           endif
         endif
-        if pages['products'] != blank
-          assign products_url = pages['products'].url
+        if pages.products != blank
+          assign products_url = pages.products.url
         endif
       %}
       {% if section.settings.secondary_menu != blank %}
@@ -74,46 +104,88 @@
           endfor
         %}
         {% for link in nav_menu.links %}
-          {{ link.title | link_to: link.url }}
-          {% if forloop.first and section.settings.show_categories and section.settings.categories != blank %}
-            <details class="nav__dropdown">
-              <summary class="nav__trigger">{{ 'navigation.categories' | t }}</summary>
-              <ul class="nav__panel">
-                {% for handle in section.settings.categories %}
-                  {% assign col = collections[handle] %}
-                  {% if col %}
-                    <li><a href="{{ col.url }}">{{ col.title }}</a></li>
-                  {% endif %}
-                {% endfor %}
-              </ul>
-            </details>
-          {% endif %}
+          {% liquid
+            assign link_label = link.title | escape
+            assign link_href = link.url
+            assign link_hash = blank
+
+            if link_href contains '#'
+              assign link_parts = link_href | split: '#'
+              assign link_href = link_parts[0]
+              assign link_hash = link_parts[1]
+            endif
+
+            if link.url == routes.root_url or link.url == '/'
+              assign link_label = 'navigation.home' | t | escape
+              assign link_href = routes.root_url
+            endif
+
+            if link.url == products_url
+              assign link_label = 'navigation.products' | t | escape
+              assign link_href = products_url
+            endif
+
+            if link.url == about_url or link.url contains '/pages/about'
+              assign link_label = 'navigation.about' | t | escape
+              assign link_href = about_url
+            endif
+
+            if link.url contains '/pages/contact'
+              assign link_label = 'navigation.contact' | t | escape
+              assign link_href = link.url
+            endif
+
+            unless link_href contains 'locale='
+              if link_href contains '?'
+                assign link_href = link_href | append: '&' | append: locale_param
+              else
+                assign link_href = link_href | append: '?' | append: locale_param
+              endif
+            endunless
+
+            if link_hash != blank
+              assign link_href = link_href | append: '#' | append: link_hash
+            endif
+          %}
+
+          <a href="{{ link_href }}">{{ link_label }}</a>
         {% endfor %}
         <a href="{{ products_url }}">{{ 'navigation.products' | t }}</a>
         {% if has_about_link == false %}
           <a href="{{ about_url }}">{{ 'navigation.about' | t }}</a>
         {% endif %}
       {% else %}
-        <a href="{{ section.settings.secondary_home_url | default: '/' }}">{{ section.settings.secondary_home_label | default: 'Home' }}</a>
-        <a href="{{ products_url }}">{{ 'navigation.products' | t }}</a>
-        {% if section.settings.show_categories and section.settings.categories != blank %}
-          <details class="nav__dropdown">
-            <summary class="nav__trigger">{{ section.settings.secondary_categories_label | default: 'Categories' }}</summary>
-            <ul class="nav__panel">
-              {% for handle in section.settings.categories %}
-                {% assign col = collections[handle] %}
-                {% if col %}
-                  <li><a href="{{ col.url }}">{{ col.title }}</a></li>
-                {% endif %}
-              {% endfor %}
-            </ul>
-          </details>
-        {% else %}
-          <a href="{{ section.settings.secondary_categories_url | default: '/collections' }}">{{ section.settings.secondary_categories_label | default: 'Categories' }}</a>
-        {% endif %}
-        <a href="{{ section.settings.secondary_brands_url | default: '/pages/brands' }}">{{ section.settings.secondary_brands_label | default: 'Our Top Brands' }}</a>
-        <a href="{{ about_url }}">{{ 'navigation.about' | t }}</a>
-        <a href="{{ section.settings.secondary_contact_url | default: '/pages/contact' }}">{{ section.settings.secondary_contact_label | default: 'Contact us' }}</a>
+        {% liquid
+          assign contact_url = section.settings.secondary_contact_url | default: '/pages/contact'
+          assign contact_href = contact_url
+          assign contact_hash = blank
+
+          if contact_href contains '#'
+            assign contact_parts = contact_href | split: '#'
+            assign contact_href = contact_parts[0]
+            assign contact_hash = contact_parts[1]
+          endif
+
+          unless contact_href contains 'locale='
+            if contact_href contains '?'
+              assign contact_href = contact_href | append: '&' | append: locale_param
+            else
+              assign contact_href = contact_href | append: '?' | append: locale_param
+            endif
+          endunless
+
+          if contact_hash != blank
+            assign contact_href = contact_href | append: '#' | append: contact_hash
+          endif
+        %}
+        <a href="{{ routes.root_url }}?{{ locale_param }}">
+          {{- 'navigation.home' | t -}}
+        </a>
+        <a href="{{ products_url }}?{{ locale_param }}">{{ 'navigation.products' | t }}</a>
+        <a href="{{ about_url }}?{{ locale_param }}">{{ 'navigation.about' | t }}</a>
+        <a href="{{ contact_href }}">
+          {{- 'navigation.contact' | t -}}
+        </a>
       {% endif %}
     </nav>
   </div>
@@ -134,9 +206,11 @@
     grid-template-columns: auto 1fr auto;
     gap: 1rem;
     align-items: center;
-    min-height: 5rem;
+    /* min-height: 8rem; */
+    padding-top: 0rem;
+    padding-bottom: 0rem;
     padding-inline: var(--page-margin);
-    padding-block: .5rem;
+    padding-block: 0.5rem;
   }
   .header__brand {
     justify-self: start;
@@ -146,7 +220,7 @@
     letter-spacing: 0.02em;
   }
   .header__logo {
-    height: 2.2rem;
+    height: 5.2rem;
     width: auto;
   }
   .header__utilities {
@@ -161,7 +235,7 @@
     align-items: center;
   }
   .header__account {
-    font-size: .9rem;
+    font-size: 0.9rem;
   }
   .header__cart {
     position: relative;
@@ -192,11 +266,11 @@
     display: grid;
     grid-template-columns: 1fr auto;
     align-items: center;
-    gap: .5rem;
+    gap: 0.5rem;
   }
   .search-input {
     width: 100%;
-    padding: .55rem .75rem;
+    padding: 0.55rem 0.75rem;
     border-radius: 999px;
     border: 1px solid color-mix(in oklab, var(--color-accent) 30%, transparent);
     background: var(--color-accent);
@@ -207,7 +281,7 @@
     color: var(--color-accent);
     border: none;
     border-radius: 999px;
-    padding: .55rem .9rem;
+    padding: 0.55rem 0.9rem;
     cursor: pointer;
   }
   .header__bottom {
@@ -224,39 +298,7 @@
   .header__nav a:hover {
     color: var(--color-link);
   }
-  .nav__dropdown {
-    position: relative;
-  }
-  .nav__trigger {
-    list-style: none;
-    cursor: pointer;
-  }
-  .nav__dropdown[open] > .nav__trigger,
-  .nav__dropdown:hover > .nav__trigger {
-    color: var(--color-link);
-  }
-  .nav__panel {
-    position: absolute;
-    top: 100%;
-    inset-inline-start: 0;
-    display: grid;
-    gap: .25rem;
-    background: var(--color-secondary);
-    color: var(--color-accent);
-    border: 1px solid color-mix(in oklab, var(--color-accent) 15%, transparent);
-    border-radius: .5rem;
-    padding: .5rem .75rem;
-    min-width: 14rem;
-    z-index: 20;
-  }
-  .nav__panel a {
-    color: var(--color-accent);
-    text-decoration: none;
-  }
-  .nav__panel a:hover {
-    color: var(--color-link);
-  }
-  html[dir="rtl"] .header__top {
+  html[dir='rtl'] .header__top {
     grid-template-columns: auto 1fr auto;
   }
 {% endstylesheet %}
@@ -303,30 +345,6 @@
     },
     {
       "type": "text",
-      "id": "secondary_categories_label",
-      "label": "Categories label",
-      "default": "Categories"
-    },
-    {
-      "type": "text",
-      "id": "secondary_categories_url",
-      "label": "Categories URL",
-      "default": "/collections"
-    },
-    {
-      "type": "text",
-      "id": "secondary_brands_label",
-      "label": "Our Top Brands label",
-      "default": "Our Top Brands"
-    },
-    {
-      "type": "text",
-      "id": "secondary_brands_url",
-      "label": "Our Top Brands URL",
-      "default": "/pages/brands"
-    },
-    {
-      "type": "text",
       "id": "secondary_contact_label",
       "label": "Contact us label",
       "default": "Contact us"
@@ -336,17 +354,6 @@
       "id": "secondary_contact_url",
       "label": "Contact us URL",
       "default": "/pages/contact"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_categories",
-      "label": "Show categories dropdown",
-      "default": true
-    },
-    {
-      "type": "collection_list",
-      "id": "categories",
-      "label": "Categories"
     }
   ]
 }

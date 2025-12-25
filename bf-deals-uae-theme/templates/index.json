@@ -28,13 +28,34 @@
         "layout": "hero-lottie--center"
       }
     },
-    "main": {
-      "type": "hello-world",
+    "home_categories": {
+      "type": "home-type-carousels",
+      "settings": {
+        "heading": "Shop by category",
+        "collection": "",
+        "sample_size": 50,
+        "max_types": 12,
+        "items_per_type": 8
+      }
+    },
+    "home_deals": {
+      "type": "home-featured-deals",
+      "settings": {}
+    },
+    "home_trust": {
+      "type": "home-trust-strip",
+      "settings": {}
+    },
+    "home_best_sellers": {
+      "type": "home-best-sellers",
       "settings": {}
     }
   },
   "order": [
     "hero",
-    "main"
+    "home_categories",
+    "home_deals",
+    "home_trust",
+    "home_best_sellers"
   ]
 }

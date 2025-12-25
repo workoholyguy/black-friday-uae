@@ -1,8 +1,21 @@
 <footer class="site-footer full-width">
+  {% liquid
+    assign locale_code = request.locale.iso_code | default: 'en'
+    assign locale_param = 'locale=' | append: locale_code
+  %}
   <div class="footer__top">
     <div class="footer__brand">
-      <a class="footer__home" href="{{ routes.root_url }}">{{ shop.name }}</a>
-      <p class="footer__tagline">Black Friday Deals · Amazon returns in UAE</p>
+      <a class="footer__home" href="{{ routes.root_url }}" aria-label="{{ shop.name | escape }}">
+        <img
+          class="footer__logo"
+          src="{{ 'BFD UAE diagonal Logo 2.png' | asset_url }}"
+          alt="{{ shop.name | escape }}"
+          width="96"
+          height="96"
+          loading="lazy"
+        >
+      </a>
+      <p class="footer__tagline">{{ 'footer.tagline' | t }}</p>
     </div>
 
     {% if section.settings.show_contact %}
@@ -35,7 +48,9 @@
                   <path d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1-.24c1.12.37 2.33.57 3.59.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1C10.07 21 3 13.93 3 5a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.26.2 2.47.57 3.59a1 1 0 0 1-.24 1l-2.21 2.2Z"/>
                 </svg>
               </span>
-              <a href="tel:{{ section.settings.contact_phone | replace: ' ', '' }}">{{ section.settings.contact_phone }}</a>
+              <a href="tel:{{ section.settings.contact_phone | replace: ' ', '' }}">
+                {{- section.settings.contact_phone -}}
+              </a>
             </p>
           {% endif %}
           {% if section.settings.contact_email != blank %}
@@ -65,17 +80,17 @@
     <div class="footer__utility">
       <div class="footer__social">
         {% if section.settings.facebook_url != blank %}
-          <a href="{{ section.settings.facebook_url }}" target="_blank" rel="noopener" aria-label="Facebook">
+          <a href="{{ section.settings.facebook_url }}" target="_blank" rel="noopener" aria-label="{{ 'footer.social.facebook' | t | escape }}">
             {{ 'icon-facebook.svg' | inline_asset_content }}
           </a>
         {% endif %}
         {% if section.settings.instagram_url != blank %}
-          <a href="{{ section.settings.instagram_url }}" target="_blank" rel="noopener" aria-label="Instagram">
+          <a href="{{ section.settings.instagram_url }}" target="_blank" rel="noopener" aria-label="{{ 'footer.social.instagram' | t | escape }}">
             {{ 'icon-instagram.svg' | inline_asset_content }}
           </a>
         {% endif %}
         {% if section.settings.tiktok_url != blank %}
-          <a href="{{ section.settings.tiktok_url }}" target="_blank" rel="noopener" aria-label="TikTok">
+          <a href="{{ section.settings.tiktok_url }}" target="_blank" rel="noopener" aria-label="{{ 'footer.social.tiktok' | t | escape }}">
             {{ 'icon-tiktok.svg' | inline_asset_content }}
           </a>
         {% endif %}
@@ -86,27 +101,33 @@
             <h4 class="footer__links-heading">{{ section.settings.utility_heading }}</h4>
           {% endif %}
           <ul class="footer__links-list">
-            <li><a href="{{ routes.search_url }}">Search</a></li>
+            <li><a href="{{ routes.search_url }}?{{ locale_param }}">{{ 'footer.search' | t }}</a></li>
             {% if shop.privacy_policy %}
-              <li><a href="{{ shop.privacy_policy.url }}">Privacy Policy</a></li>
+              <li><a href="{{ shop.privacy_policy.url }}?{{ locale_param }}">{{ 'footer.privacy_policy' | t }}</a></li>
             {% elsif section.settings.privacy_policy_url != blank %}
-              <li><a href="{{ section.settings.privacy_policy_url }}">Privacy Policy</a></li>
+              <li><a href="{{ section.settings.privacy_policy_url }}?{{ locale_param }}">{{ 'footer.privacy_policy' | t }}</a></li>
             {% endif %}
             {% if shop.refund_policy %}
-              <li><a href="{{ shop.refund_policy.url }}">Refund Policy</a></li>
+              <li><a href="{{ shop.refund_policy.url }}?{{ locale_param }}">{{ 'footer.refund_policy' | t }}</a></li>
             {% elsif section.settings.refund_policy_url != blank %}
-              <li><a href="{{ section.settings.refund_policy_url }}">Refund Policy</a></li>
+              <li><a href="{{ section.settings.refund_policy_url }}?{{ locale_param }}">{{ 'footer.refund_policy' | t }}</a></li>
             {% endif %}
-            {% if shop.shipping_policy %}<li><a href="{{ shop.shipping_policy.url }}">Shipping Policy</a></li>{% endif %}
+            {% if shop.shipping_policy %}
+              <li><a href="{{ shop.shipping_policy.url }}?{{ locale_param }}">{{ 'footer.shipping_policy' | t }}</a></li>
+            {% endif %}
             {% unless shop.shipping_policy %}
               {% if section.settings.shipping_policy_url != blank %}
-                <li><a href="{{ section.settings.shipping_policy_url }}">Shipping Policy</a></li>
+                <li><a href="{{ section.settings.shipping_policy_url }}?{{ locale_param }}">{{ 'footer.shipping_policy' | t }}</a></li>
               {% endif %}
             {% endunless %}
             {% if shop.terms_of_service %}
-              <li><a href="{{ shop.terms_of_service.url }}">{{ 'footer.terms_of_service' | t }}</a></li>
+              <li>
+                <a href="{{ shop.terms_of_service.url }}?{{ locale_param }}">{{ 'footer.terms_of_service' | t }}</a>
+              </li>
             {% elsif section.settings.terms_of_service_url != blank %}
-              <li><a href="{{ section.settings.terms_of_service_url }}">{{ 'footer.terms_of_service' | t }}</a></li>
+              <li>
+                <a href="{{ section.settings.terms_of_service_url }}?{{ locale_param }}">{{ 'footer.terms_of_service' | t }}</a>
+              </li>
             {% endif %}
           </ul>
         </div>
@@ -116,7 +137,8 @@
 
   <div class="footer__bottom">
     <div class="footer__copyright">
-      &copy; {{ 'now' | date: '%Y' }} {{ shop.name | link_to: routes.root_url }}, {{ powered_by_link }}
+      &copy; {{ 'now' | date: '%Y' }}
+      {{ shop.name | link_to: routes.root_url }}, {{ powered_by_link }}
     </div>
     <div class="footer__payment">
       {% if section.settings.show_payment_icons %}
@@ -132,8 +154,9 @@
   .site-footer {
     background: var(--color-footer-bg);
     color: var(--color-accent);
-    margin-top: 2rem;
+    margin-top: 0rem;
     padding-block: 2rem;
+    padding-top: 0rem;
     border-block-start: 2px solid var(--color-primary);
   }
   .site-footer a {
@@ -151,6 +174,10 @@
   .footer__brand {
     justify-self: start;
   }
+  .footer__logo {
+    height: 15rem;
+    width: auto;
+  }
   .footer__tagline {
     font-size: 0.875rem;
     opacity: 0.85;
@@ -159,7 +186,7 @@
     justify-self: center;
     margin-top: 0;
     display: grid;
-    gap: .25rem;
+    gap: 0.25rem;
   }
   .footer__contact-heading {
     font-size: 0.95rem;
@@ -169,7 +196,7 @@
     font-style: normal;
     font-size: 0.9rem;
     display: grid;
-    gap: .15rem;
+    gap: 0.15rem;
   }
   .footer__address-line {
     display: flex;
@@ -198,16 +225,34 @@
   .footer__address-line a:hover {
     color: var(--color-link);
   }
-  .footer__utility { justify-self: end; display: grid; gap: .5rem; }
-  .footer__social { display: flex; gap: 0.75rem; }
+  .footer__utility {
+    justify-self: end;
+    display: grid;
+    gap: 0.5rem;
+  }
+  .footer__social {
+    display: flex;
+    gap: 0.75rem;
+  }
   .footer__social svg {
     width: 1.25rem;
     height: 1.25rem;
     fill: currentColor;
   }
-  .footer__links-heading { font-size: 0.95rem; margin: 0; }
-  .footer__links-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .2rem; }
-  .footer__links-list a:hover { color: var(--color-link); }
+  .footer__links-heading {
+    font-size: 0.95rem;
+    margin: 0;
+  }
+  .footer__links-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.2rem;
+  }
+  .footer__links-list a:hover {
+    color: var(--color-link);
+  }
   .footer__bottom {
     display: flex;
     justify-content: space-between;

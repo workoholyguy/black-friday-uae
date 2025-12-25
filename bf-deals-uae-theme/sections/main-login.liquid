@@ -1,0 +1,322 @@
+<section class="login full-width" aria-label="{{ 'customers.login.title' | t | escape }}">
+  <div class="login__grid">
+    <div class="login__inner">
+      <div class="login__header">
+        <h1 class="login__title">{{ 'customers.login.title' | t }}</h1>
+        <p class="login__subtitle">{{ 'customers.login.subtitle' | t }}</p>
+      </div>
+
+      <div class="login__card">
+        {% form 'customer_login' %}
+          {% if form.errors %}
+            <div class="login__errors">
+              {{ form.errors | default_errors }}
+            </div>
+          {% endif %}
+
+          <div class="login__fields">
+            <div class="login__field">
+              <label class="login__label" for="CustomerEmail">
+                {{ 'customers.login.email' | t }}
+              </label>
+              <input
+                class="login__input"
+                type="email"
+                name="customer[email]"
+                id="CustomerEmail"
+                autocomplete="email"
+                autocapitalize="off"
+                spellcheck="false"
+                required
+              >
+            </div>
+
+            <div class="login__field">
+              <label class="login__label" for="CustomerPassword">
+                {{ 'customers.login.password' | t }}
+              </label>
+              <input
+                class="login__input"
+                type="password"
+                name="customer[password]"
+                id="CustomerPassword"
+                autocomplete="current-password"
+                required
+              >
+            </div>
+          </div>
+
+          <button class="login__button login__button--primary" type="submit">
+            {{ 'customers.login.submit' | t }}
+          </button>
+        {% endform %}
+
+        <div class="login__links">
+          <a class="login__link" href="{{ routes.root_url }}">
+            {{ 'customers.login.return_to_store' | t }}
+          </a>
+          <a class="login__link" href="{{ routes.account_register_url }}">
+            {{ 'customers.login.create_account' | t }}
+          </a>
+        </div>
+      </div>
+
+      <details class="login__recover">
+        <summary class="login__recover-summary">{{ 'customers.login.forgot_password' | t }}</summary>
+        <div class="login__recover-body">
+          <div class="login__recover-card">
+            <h2 class="login__recover-title">{{ 'customers.login.recover_title' | t }}</h2>
+
+            {% form 'recover_customer_password' %}
+              {% if form.posted_successfully? %}
+                <p class="login__success">{{ 'customers.login.recover_success' | t }}</p>
+              {% endif %}
+
+              {% if form.errors %}
+                <div class="login__errors">
+                  {{ form.errors | default_errors }}
+                </div>
+              {% endif %}
+
+              <div class="login__field">
+                <label class="login__label" for="RecoverEmail">
+                  {{ 'customers.login.email' | t }}
+                </label>
+                <input
+                  class="login__input"
+                  type="email"
+                  name="email"
+                  id="RecoverEmail"
+                  autocomplete="email"
+                  autocapitalize="off"
+                  spellcheck="false"
+                  required
+                >
+              </div>
+
+              <button class="login__button login__button--secondary" type="submit">
+                {{ 'customers.login.recover_submit' | t }}
+              </button>
+            {% endform %}
+          </div>
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .login {
+    display: grid;
+    grid-template-columns: var(--content-grid);
+    padding-block: clamp(2rem, 5vw, 3.75rem);
+    background:
+      radial-gradient(
+        900px 420px at 15% 0%,
+        color-mix(in srgb, var(--color-primary) 12%, transparent),
+        transparent 55%
+      ),
+      radial-gradient(
+        900px 420px at 85% 35%,
+        color-mix(in srgb, var(--color-foreground) 6%, transparent),
+        transparent 60%
+      );
+  }
+
+  .login__grid {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: var(--content-grid);
+  }
+
+  .login__inner {
+    grid-column: 2;
+    width: 100%;
+    max-width: 520px;
+    margin-inline: auto;
+    display: grid;
+    gap: 14px;
+  }
+
+  .login__header {
+    display: grid;
+    gap: 6px;
+    text-align: center;
+    padding-inline: 8px;
+  }
+
+  .login__title {
+    margin: 0;
+    font-size: clamp(1.7rem, 3.6vw, 2.2rem);
+    letter-spacing: -0.02em;
+  }
+
+  .login__subtitle {
+    color: color-mix(in oklab, var(--color-foreground) 70%, transparent);
+  }
+
+  .login__card {
+    border-radius: 18px;
+    border: 1px solid color-mix(in srgb, var(--color-foreground) 12%, transparent);
+    background: color-mix(in srgb, var(--color-background) 96%, var(--color-foreground) 4%);
+    box-shadow: 0 14px 30px color-mix(in srgb, var(--color-foreground) 10%, transparent);
+    padding: 16px;
+    display: grid;
+    gap: 12px;
+  }
+
+  .login__errors {
+    border-radius: 14px;
+    border: 1px solid color-mix(in srgb, var(--color-foreground) 14%, transparent);
+    background: color-mix(in srgb, var(--color-foreground) 2%, transparent);
+    padding: 10px 12px;
+  }
+
+  .login__success {
+    border-radius: 14px;
+    border: 1px solid color-mix(in srgb, var(--color-foreground) 14%, transparent);
+    background: color-mix(in srgb, var(--color-primary) 10%, transparent);
+    padding: 10px 12px;
+    font-weight: 700;
+  }
+
+  .login__fields {
+    display: grid;
+    gap: 10px;
+  }
+
+  .login__field {
+    display: grid;
+    gap: 6px;
+  }
+
+  .login__label {
+    font-weight: 800;
+    font-size: 0.95rem;
+  }
+
+  .login__input {
+    width: 100%;
+    border: 1px solid color-mix(in srgb, var(--color-foreground) 14%, transparent);
+    background: var(--color-background);
+    color: var(--color-foreground);
+    border-radius: var(--style-border-radius-inputs);
+    padding: 0.75rem 0.85rem;
+    transition: border-color 160ms ease, box-shadow 160ms ease;
+  }
+
+  .login__input:focus {
+    outline: none;
+    border-color: color-mix(in oklab, var(--color-link) 55%, transparent);
+    box-shadow: 0 0 0 4px color-mix(in oklab, var(--color-link) 16%, transparent);
+  }
+
+  .login__button {
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    padding: 0.78rem 1rem;
+    font-weight: 900;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 160ms ease, opacity 160ms ease;
+  }
+
+  .login__button:hover {
+    transform: translateY(-1px);
+  }
+
+  .login__button:active {
+    transform: translateY(0);
+  }
+
+  .login__button--primary {
+    border: 0;
+    background: var(--color-primary);
+    color: var(--color-accent);
+  }
+
+  .login__button--secondary {
+    border: 1px solid color-mix(in srgb, var(--color-foreground) 14%, transparent);
+    background: color-mix(in srgb, var(--color-background) 78%, transparent);
+    color: var(--color-foreground);
+  }
+
+  .login__links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 10px 14px;
+    padding-top: 2px;
+  }
+
+  .login__link {
+    color: var(--color-link);
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 0.95rem;
+  }
+
+  .login__link:hover {
+    text-decoration: underline;
+  }
+
+  .login__recover {
+    border-radius: 18px;
+    border: 1px solid color-mix(in srgb, var(--color-foreground) 12%, transparent);
+    background: color-mix(in srgb, var(--color-background) 96%, var(--color-foreground) 4%);
+    box-shadow: 0 14px 30px color-mix(in srgb, var(--color-foreground) 10%, transparent);
+    overflow: hidden;
+  }
+
+  .login__recover-summary {
+    cursor: pointer;
+    padding: 14px 16px;
+    font-weight: 900;
+    list-style: none;
+    text-align: center;
+  }
+
+  .login__recover-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .login__recover-summary::after {
+    content: '+';
+    float: inline-end;
+    font-weight: 900;
+    opacity: 0.8;
+  }
+
+  details[open] > .login__recover-summary::after {
+    content: '–';
+  }
+
+  .login__recover-body {
+    padding: 0 16px 16px 16px;
+  }
+
+  .login__recover-card {
+    display: grid;
+    gap: 12px;
+    padding-top: 6px;
+  }
+
+  .login__recover-title {
+    margin: 0;
+    font-size: 1.05rem;
+    letter-spacing: -0.01em;
+    text-align: center;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:general.login",
+  "settings": []
+}
+{% endschema %}
+
+

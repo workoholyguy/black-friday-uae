@@ -1,0 +1,257 @@
+{% liquid
+  assign heading = section.settings.heading
+  assign menu = section.settings.categories_menu
+  assign fallback_collections = section.settings.categories_collections
+  assign products_limit = section.settings.products_limit | default: 10
+%}
+
+<section class="home-category-carousels">
+  {% if heading != blank %}
+    <header class="home-category-carousels__header">
+      <h2 class="home-category-carousels__title">{{ heading | escape }}</h2>
+    </header>
+  {% endif %}
+
+  {% if menu != blank and menu.links.size > 0 %}
+    {% for link in menu.links %}
+      {% liquid
+        assign collection = link.object
+      %}
+
+      {% if collection != blank %}
+        <section class="home-category-carousel" aria-label="{{ collection.title | escape }}">
+          <header class="home-category-carousel__header">
+            <h3 class="home-category-carousel__title">
+              <a href="{{ collection.url }}">{{ link.title | escape }}</a>
+            </h3>
+            <a class="home-category-carousel__link" href="{{ collection.url }}">
+              {{ 'home.general.view_all' | t }}
+            </a>
+          </header>
+
+          <div class="home-category-carousel__scroller" role="list" data-scroll-hint>
+            {% for product in collection.products limit: products_limit %}
+              <div class="home-category-carousel__item" role="listitem">
+                {% render 'product-card', product: product, show_vendor: false, show_price: true, class: 'product-card--compact' %}
+              </div>
+            {% endfor %}
+            <div class="scroll-hint" aria-hidden="true"></div>
+          </div>
+        </section>
+      {% endif %}
+    {% endfor %}
+  {% elsif fallback_collections != blank and fallback_collections.size > 0 %}
+    {% for collection in fallback_collections %}
+      {% if collection != blank %}
+        <section class="home-category-carousel" aria-label="{{ collection.title | escape }}">
+          <header class="home-category-carousel__header">
+            <h3 class="home-category-carousel__title">
+              <a href="{{ collection.url }}">{{ collection.title | escape }}</a>
+            </h3>
+            <a class="home-category-carousel__link" href="{{ collection.url }}">
+              {{ 'home.general.view_all' | t }}
+            </a>
+          </header>
+
+          <div class="home-category-carousel__scroller" role="list" data-scroll-hint>
+            {% for product in collection.products limit: products_limit %}
+              <div class="home-category-carousel__item" role="listitem">
+                {% render 'product-card', product: product, show_vendor: false, show_price: true, class: 'product-card--compact' %}
+              </div>
+            {% endfor %}
+            <div class="scroll-hint" aria-hidden="true"></div>
+          </div>
+        </section>
+      {% endif %}
+    {% endfor %}
+  {% else %}
+    <div class="home-category-carousels__empty">
+      {{ 'home.category_carousels.pick_source' | t }}
+    </div>
+  {% endif %}
+</section>
+
+{% stylesheet %}
+  .home-category-carousels {
+    padding: clamp(1.25rem, 4vw, 2.5rem) var(--page-margin);
+    display: grid;
+    gap: clamp(1.5rem, 4vw, 2.25rem);
+  }
+
+  .home-category-carousels__header {
+    margin-block-end: -0.5rem;
+  }
+
+  .home-category-carousels__title {
+    font-size: clamp(1.25rem, 2.2vw, 1.6rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+
+  .home-category-carousel__header {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-block-end: 0.9rem;
+  }
+
+  .home-category-carousel__title {
+    font-size: 1.05rem;
+    font-weight: 850;
+    letter-spacing: -0.01em;
+  }
+
+  .home-category-carousel__title a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .home-category-carousel__link {
+    font-weight: 800;
+    color: var(--color-primary);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .home-category-carousel__scroller {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-block: 0.15rem 0.5rem;
+  }
+
+  .home-category-carousel__scroller .scroll-hint {
+    position: sticky;
+    right: 0;
+    align-self: stretch;
+    flex: 0 0 44px;
+    pointer-events: none;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      color-mix(in srgb, var(--color-background) 40%, transparent) 40%,
+      color-mix(in srgb, var(--color-background) 92%, transparent) 100%
+    );
+    opacity: 0.95;
+    transition: opacity 160ms ease;
+  }
+
+  .home-category-carousel__scroller .scroll-hint::after {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-inline-end: 3px solid color-mix(in srgb, var(--color-foreground) 65%, transparent);
+    border-block-start: 3px solid color-mix(in srgb, var(--color-foreground) 65%, transparent);
+    transform: rotate(45deg);
+    animation: homeCategoryCarouselsScrollHint 1.35s ease-in-out infinite;
+  }
+
+  .home-category-carousel__scroller.is-not-scrollable .scroll-hint,
+  .home-category-carousel__scroller.is-at-end .scroll-hint {
+    opacity: 0;
+  }
+
+  @keyframes homeCategoryCarouselsScrollHint {
+    0%,
+    100% {
+      transform: translateX(0) rotate(45deg);
+    }
+    50% {
+      transform: translateX(5px) rotate(45deg);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .home-category-carousel__scroller .scroll-hint::after {
+      animation: none;
+    }
+  }
+
+  .home-category-carousel__item {
+    scroll-snap-align: start;
+    flex: 0 0 min(62vw, 220px);
+  }
+
+  @media (min-width: 1000px) {
+    .home-category-carousel__scroller {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      overflow: visible;
+      scroll-snap-type: none;
+    }
+
+    .home-category-carousel__item {
+      flex: initial;
+    }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  const sectionRoot = document.currentScript?.closest('.shopify-section')
+  if (sectionRoot) {
+    const scrollers = sectionRoot.querySelectorAll('[data-scroll-hint]')
+    const update = (el) => {
+      const maxScroll = el.scrollWidth - el.clientWidth
+      const scrollable = maxScroll > 2
+      el.classList.toggle('is-not-scrollable', !scrollable)
+      if (!scrollable) {
+        el.classList.remove('is-at-end')
+        return
+      }
+      el.classList.toggle('is-at-end', el.scrollLeft >= maxScroll - 2)
+    }
+
+    scrollers.forEach((el) => {
+      const run = () => update(el)
+      run()
+      el.addEventListener('scroll', run, { passive: true })
+      window.addEventListener('resize', run, { passive: true })
+    })
+  }
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Home category carousels",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Shop by category"
+    },
+    {
+      "type": "link_list",
+      "id": "categories_menu",
+      "label": "Categories menu",
+      "info": "Add collection links to a menu. This section will automatically create a carousel per collection link."
+    },
+    {
+      "type": "collection_list",
+      "id": "categories_collections",
+      "label": "Fallback categories (manual)",
+      "info": "Used only if no menu is selected."
+    },
+    {
+      "type": "range",
+      "id": "products_limit",
+      "label": "Products per category",
+      "min": 4,
+      "max": 16,
+      "step": 1,
+      "default": 8
+    }
+  ],
+  "presets": [
+    {
+      "name": "Home category carousels"
+    }
+  ]
+}
+{% endschema %}
+
+

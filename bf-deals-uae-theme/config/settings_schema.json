@@ -123,5 +123,24 @@
         "default": 4
       }
     ]
+  },
+  {
+    "name": "t:general.branding",
+    "settings": [
+      {
+        "type": "header",
+        "content": "t:general.branding"
+      },
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "t:labels.favicon"
+      },
+      {
+        "type": "image_picker",
+        "id": "apple_touch_icon",
+        "label": "t:labels.apple_touch_icon"
+      }
+    ]
   }
 ]
