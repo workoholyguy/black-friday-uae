@@ -66,6 +66,8 @@
     color: var(--color-foreground);
     position: relative;
     margin-block-end: 5rem;
+    max-width: 100%;
+    overflow-x: clip;
   }
   .hero-lottie__inner {
     display: grid;
@@ -74,6 +76,8 @@
     align-items: center;
     padding-block: clamp(0.25rem, 3vw, 0.5rem);
     padding-inline: var(--page-margin);
+    max-width: 100%;
+    min-width: 0;
   }
   .hero-lottie__inner.hero-lottie--center {
     grid-template-columns: 1fr;
@@ -113,6 +117,8 @@
   .hero-lottie__anim {
     display: grid;
     place-items: center;
+    min-width: 0;
+    overflow: hidden;
   }
   .hero-lottie__anim > div {
     width: min(100%, 640px);
