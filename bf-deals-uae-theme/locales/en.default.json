@@ -94,7 +94,10 @@
     "message": "Message",
     "message_hint": "Include your order number and a short summary so we can help faster.",
     "submit": "Send",
+    "submit_loading": "Sending…",
     "success": "Thanks for contacting us. We’ll get back to you soon.",
+    "modal_title": "Message sent",
+    "modal_close": "Close",
     "services_title": "What we help with",
     "stats_fast": "Responses within 2 hours",
     "stats_support": "WhatsApp & phone coverage 11AM‑11PM",
@@ -219,6 +222,12 @@
       "household": "Household",
       "luggage_travel_bags": "Luggage & travel bags",
       "kids_toddlers": "Kids & toddlers"
+    }
+  },
+  "banner": {
+    "carousel": {
+      "prev": "Previous slide",
+      "next": "Next slide"
     }
   },
   "home": {

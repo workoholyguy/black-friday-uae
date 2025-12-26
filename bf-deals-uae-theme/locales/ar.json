@@ -94,7 +94,10 @@
     "message": "الرسالة",
     "message_hint": "أضف رقم الطلب وملخصًا قصيرًا حتى نساعدك أسرع.",
     "submit": "إرسال",
+    "submit_loading": "جارٍ الإرسال…",
     "success": "شكراً لتواصلك معنا. سنعود إليك قريباً.",
+    "modal_title": "تم إرسال الرسالة",
+    "modal_close": "إغلاق",
     "services_title": "كيف نساعدك",
     "stats_fast": "ردود خلال ساعتين",
     "stats_support": "دعم واتساب وهاتف من 11ص إلى 11م",
@@ -219,6 +222,12 @@
       "household": "منزل",
       "luggage_travel_bags": "حقائب وسفر",
       "kids_toddlers": "أطفال"
+    }
+  },
+  "banner": {
+    "carousel": {
+      "prev": "الشريحة السابقة",
+      "next": "الشريحة التالية"
     }
   },
   "home": {

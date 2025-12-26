@@ -28,6 +28,59 @@
         "layout": "hero-lottie--center"
       }
     },
+    "home_banner_carousel": {
+      "type": "home-banner-carousel",
+      "settings": {
+        "heading": "Spotlight deals",
+        "max_width": 1400,
+        "radius": 18,
+        "gap": 12
+      },
+      "blocks": {
+        "carousel_image_1": {
+          "type": "image",
+          "settings": {
+            "asset": "BANNER 1.png",
+            "image": null,
+            "alt_text": "",
+            "link": ""
+          }
+        },
+        "carousel_image_2": {
+          "type": "image",
+          "settings": {
+            "asset": "BANNER 2.png",
+            "image": null,
+            "alt_text": "",
+            "link": ""
+          }
+        },
+        "carousel_image_3": {
+          "type": "image",
+          "settings": {
+            "asset": "BANNER 3.png",
+            "image": null,
+            "alt_text": "",
+            "link": ""
+          }
+        },
+        "carousel_image_4": {
+          "type": "image",
+          "settings": {
+            "asset": "BANNER 4.png",
+            "image": null,
+            "alt_text": "",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "carousel_image_1",
+        "carousel_image_2",
+        "carousel_image_3",
+        "carousel_image_4"
+      ]
+    },
     "home_categories": {
       "type": "home-type-carousels",
       "settings": {
@@ -36,6 +89,17 @@
         "sample_size": 50,
         "max_types": 12,
         "items_per_type": 8
+      }
+    },
+    "home_banner_1": {
+      "type": "home-banner",
+      "settings": {
+        "image": null,
+        "alt_text": "",
+        "link": "",
+        "max_width": 1400,
+        "radius": 18,
+        "padding": 24
       }
     },
     "home_deals": {
@@ -53,6 +117,8 @@
   },
   "order": [
     "hero",
+    "home_banner_carousel",
+    "home_banner_1",
     "home_categories",
     "home_deals",
     "home_trust",

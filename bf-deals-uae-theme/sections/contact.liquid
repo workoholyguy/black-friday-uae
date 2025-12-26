@@ -1,11 +1,6 @@
-{% doc %}
+{% comment %}
   Contact page section with business details + contact form.
-
-  Goals:
-  - Clean Black Friday look (black / white / red)
-  - Clear hierarchy (intro → ways to reach us → FAQs → form)
-  - Mobile-first, no “random borders everywhere”
-{% enddoc %}
+{% endcomment %}
 
 <section class="contact full-width" data-section-id="{{ section.id }}">
   <div class="contact__inner">
@@ -250,72 +245,107 @@
           <h2 class="contact__panel-title">{{ 'contact.form_title' | t }}</h2>
           <p class="contact__panel-subtitle">{{ 'contact.form_subtitle' | t }}</p>
 
-          {% form 'contact', id: 'ContactForm' %}
+          <dialog class="contact__dialog" data-contact-dialog>
+            <div class="contact__dialog-card" role="document">
+              <p class="contact__dialog-title">{{ 'contact.modal_title' | t }}</p>
+              <p class="contact__dialog-body">{{ 'contact.success' | t }}</p>
+              <button type="button" class="contact__dialog-close" data-contact-dialog-close>
+                {{ 'contact.modal_close' | t }}
+              </button>
+            </div>
+          </dialog>
+
+          {% liquid
+            assign contact_form_id = 'ContactForm-' | append: section.id
+          %}
+          {% form 'contact', id: contact_form_id %}
             {% if form.posted_successfully? %}
-              <p class="contact__success" role="status">{{ 'contact.success' | t }}</p>
+              <p class="contact__success" role="status" data-contact-success>{{ 'contact.success' | t }}</p>
             {% endif %}
 
             {% if form.errors %}
               <ul class="contact__errors" role="alert">
                 {% for field in form.errors %}
-                  <li>{{ form.errors.messages[field] }}</li>
+                  <li>{{ form.errors.messages[field] | escape }}</li>
                 {% endfor %}
               </ul>
             {% endif %}
 
-            <div class="field">
-              <label for="ContactName">{{ 'contact.name' | t }}</label>
-              <input
-                id="ContactName"
-                type="text"
-                name="contact[name]"
-                value="{{ form.name | default: customer.name }}"
-                autocomplete="name"
-                required
-              >
+            <div class="contact__fields">
+              <div class="contact__row">
+                <div class="contact__field">
+                  <label for="ContactName-{{ section.id }}">{{ 'contact.name' | t }}</label>
+                  <input
+                    id="ContactName-{{ section.id }}"
+                    class="contact__input"
+                    type="text"
+                    name="contact[name]"
+                    value="{{ form.name | default: customer.name | escape }}"
+                    autocomplete="name"
+                    required
+                  >
+                </div>
+
+                <div class="contact__field">
+                  <label for="ContactEmail-{{ section.id }}">{{ 'contact.email' | t }}</label>
+                  <input
+                    id="ContactEmail-{{ section.id }}"
+                    class="contact__input"
+                    type="email"
+                    name="contact[email]"
+                    value="{{ form.email | default: customer.email | escape }}"
+                    autocomplete="email"
+                    required
+                  >
+                </div>
+              </div>
+
+              <div class="contact__row">
+                <div class="contact__field">
+                  <label for="ContactPhone-{{ section.id }}">{{ 'contact.phone' | t }}</label>
+                  <input
+                    id="ContactPhone-{{ section.id }}"
+                    class="contact__input"
+                    type="tel"
+                    name="contact[phone]"
+                    value="{{ form.phone | default: customer.phone | escape }}"
+                    autocomplete="tel"
+                  >
+                </div>
+
+                <div class="contact__field">
+                  <label for="ContactOrder-{{ section.id }}">{{ 'contact.order' | t }}</label>
+                  <input
+                    id="ContactOrder-{{ section.id }}"
+                    class="contact__input"
+                    type="text"
+                    name="contact[order_number]"
+                    placeholder="{{ 'contact.order_placeholder' | t }}"
+                  >
+                </div>
+              </div>
+
+              <div class="contact__field">
+                <label for="ContactMessage-{{ section.id }}">{{ 'contact.message' | t }}</label>
+                <textarea
+                  id="ContactMessage-{{ section.id }}"
+                  class="contact__input contact__input--textarea"
+                  name="contact[body]"
+                  rows="7"
+                  required
+                  aria-describedby="ContactMessageHint-{{ section.id }}"
+                >{{ form.body | escape }}</textarea>
+                <p class="contact__hint" id="ContactMessageHint-{{ section.id }}">{{ 'contact.message_hint' | t }}</p>
+              </div>
             </div>
 
-            <div class="field">
-              <label for="ContactEmail">{{ 'contact.email' | t }}</label>
-              <input
-                id="ContactEmail"
-                type="email"
-                name="contact[email]"
-                value="{{ form.email | default: customer.email }}"
-                autocomplete="email"
-                required
-              >
-            </div>
-
-            <div class="field">
-              <label for="ContactPhone">{{ 'contact.phone' | t }}</label>
-              <input
-                id="ContactPhone"
-                type="tel"
-                name="contact[phone]"
-                value="{{ form.phone | default: customer.phone }}"
-                autocomplete="tel"
-              >
-            </div>
-
-            <div class="field">
-              <label for="ContactOrder">{{ 'contact.order' | t }}</label>
-              <input
-                id="ContactOrder"
-                type="text"
-                name="contact[order_number]"
-                placeholder="{{ 'contact.order_placeholder' | t }}"
-              >
-            </div>
-
-            <div class="field">
-              <label for="ContactMessage">{{ 'contact.message' | t }}</label>
-              <textarea id="ContactMessage" name="contact[body]" rows="6" required>{{ form.body }}</textarea>
-              <p class="contact__hint">{{ 'contact.message_hint' | t }}</p>
-            </div>
-
-            <button type="submit" class="contact__submit">
-              {{ 'contact.submit' | t }}
+            <button
+              type="submit"
+              class="contact__submit"
+              data-contact-submit
+              data-label-loading="{{ 'contact.submit_loading' | t | escape }}"
+            >
+              <span data-contact-submit-label>{{ 'contact.submit' | t }}</span>
             </button>
           {% endform %}
 
@@ -428,7 +458,7 @@
 
   .contact__stat {
     background: rgba(255,255,255,.06);
-    border: 1px solid red;
+    border: 1px solid rgba(255,255,255,.14);
     border-radius: var(--bf-radius);
     padding: .85rem .85rem;
   }
@@ -670,29 +700,43 @@
     top: 1rem;
   }
 
-  .field {
+  .contact__fields {
     display: grid;
-    gap: .35rem;
-    margin-bottom: .75rem;
+    gap: .85rem;
+    margin-bottom: .85rem;
   }
 
-  .field label {
+  .contact__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .85rem;
+  }
+
+  .contact__field {
+    display: grid;
+    gap: .35rem;
+  }
+
+  .contact__field label {
     font-weight: 700;
   }
 
-  .field input,
-  .field textarea {
+  .contact__input {
     width: 100%;
     padding: .7rem .85rem;
     border-radius: 12px;
-    border: 1px solid black;
+    border: 1px solid var(--bf-gray-200);
     background: var(--bf-white);
     color: var(--bf-black);
     outline: none;
   }
 
-  .field input:focus,
-  .field textarea:focus {
+  .contact__input--textarea {
+    resize: vertical;
+    min-height: 160px;
+  }
+
+  .contact__input:focus {
     border-color: rgba(214, 24, 24, .55);
     box-shadow: 0 0 0 4px rgba(214, 24, 24, .12);
   }
@@ -717,6 +761,10 @@
   .contact__submit:hover {
     filter: brightness(1.02);
   }
+  .contact__submit[disabled] {
+    opacity: 0.75;
+    cursor: not-allowed;
+  }
 
   .contact__errors {
     margin: 0 0 .75rem;
@@ -732,6 +780,56 @@
     border: 1px solid rgba(214, 24, 24, .18);
     color: #111;
     font-weight: 700;
+  }
+
+  .contact__dialog {
+    border: 0;
+    padding: 0;
+    background: transparent;
+    width: min(520px, calc(100vw - 2rem));
+  }
+  .contact__dialog[open] {
+    position: fixed;
+    inset: 0;
+    margin: auto;
+  }
+  .contact__dialog::backdrop {
+    background: rgba(0, 0, 0, 0.6);
+  }
+  .contact__dialog-card {
+    background: var(--bf-white);
+    color: var(--bf-black);
+    border-radius: 16px;
+    box-shadow: 0 18px 46px rgba(0, 0, 0, 0.35);
+    border: 1px solid var(--bf-gray-200);
+    padding: 1.1rem 1.1rem;
+    display: grid;
+    gap: 0.65rem;
+  }
+  .contact__dialog-title {
+    margin: 0;
+    font-weight: 900;
+    letter-spacing: -0.01em;
+    font-size: 1.05rem;
+  }
+  .contact__dialog-body {
+    margin: 0;
+    opacity: 0.9;
+    line-height: 1.55;
+  }
+  .contact__dialog-close {
+    margin-top: 0.25rem;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 999px;
+    border: 1px solid rgba(0,0,0,.12);
+    background: var(--bf-red);
+    color: var(--bf-white);
+    font-weight: 900;
+    cursor: pointer;
+  }
+  .contact__dialog-close:hover {
+    filter: brightness(1.02);
   }
 
   /* CTA */
@@ -789,6 +887,9 @@
       grid-template-columns: 1fr;
       gap: .15rem;
     }
+    .contact__row {
+      grid-template-columns: 1fr;
+    }
   }
 
   @media (max-width: 520px) {
@@ -803,6 +904,71 @@
     }
   }
 {% endstylesheet %}
+
+{% javascript %}
+  (function() {
+    function init(root) {
+      if (!root) return;
+      var dialog = root.querySelector('[data-contact-dialog]');
+      if (!dialog) return;
+
+      var close = root.querySelector('[data-contact-dialog-close]');
+      if (close) {
+        close.addEventListener('click', function() {
+          if (dialog.open) dialog.close();
+        });
+      }
+
+      dialog.addEventListener('click', function(e) {
+        if (e.target === dialog) dialog.close();
+      });
+
+      var success = root.querySelector('[data-contact-success]');
+      if (success) {
+        try {
+          dialog.showModal();
+        } catch (e) {}
+      }
+
+      var form = root.querySelector('.contact__form form');
+      var submit = root.querySelector('[data-contact-submit]');
+      var submitLabel = root.querySelector('[data-contact-submit-label]');
+      if (form && submit && submitLabel) {
+        var initialLabel = submitLabel.textContent;
+        submit.setAttribute('data-label-initial', initialLabel);
+
+        form.addEventListener('submit', function() {
+          submit.disabled = true;
+          submit.setAttribute('aria-busy', 'true');
+          submitLabel.textContent = submit.getAttribute('data-label-loading') || initialLabel;
+
+          window.setTimeout(function() {
+            submit.disabled = false;
+            submit.removeAttribute('aria-busy');
+            submitLabel.textContent = submit.getAttribute('data-label-initial') || initialLabel;
+          }, 10000);
+        });
+      }
+    }
+
+    function initAll() {
+      var roots = document.querySelectorAll('.contact');
+      for (var i = 0; i < roots.length; i++) init(roots[i]);
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initAll);
+    } else {
+      initAll();
+    }
+
+    document.addEventListener('shopify:section:load', function(e) {
+      if (!e || !e.target) return;
+      var root = e.target.querySelector('.contact');
+      if (root) init(root);
+    });
+  })();
+{% endjavascript %}
 
 {% schema %}
 {

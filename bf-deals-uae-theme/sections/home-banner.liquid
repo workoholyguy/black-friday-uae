@@ -1,0 +1,126 @@
+{% liquid
+  assign image = section.settings.image
+  assign href = section.settings.link
+  assign alt = section.settings.alt_text | default: ''
+%}
+
+{% if image %}
+  <section class="home-banner" style="
+    --banner-max-width: {{ section.settings.max_width }}px;
+    --banner-radius: {{ section.settings.radius }}px;
+    --banner-pad: {{ section.settings.padding }}px;
+  ">
+    {% if href != blank %}
+      <a class="home-banner__link" href="{{ href }}">
+        {{ image | image_url: width: 2000 | image_tag:
+          widths: '400,800,1200,1600,2000',
+          sizes: '100vw',
+          loading: 'lazy',
+          alt: alt,
+          class: 'home-banner__image'
+        }}
+      </a>
+    {% else %}
+      {{ image | image_url: width: 2000 | image_tag:
+        widths: '400,800,1200,1600,2000',
+        sizes: '100vw',
+        loading: 'lazy',
+        alt: alt,
+        class: 'home-banner__image'
+      }}
+    {% endif %}
+  </section>
+{% endif %}
+
+{% stylesheet %}
+  .home-banner {
+    display: flex;
+    justify-content: center;
+    padding: var(--banner-pad) var(--page-margin);
+  }
+  .home-banner__link {
+    display: block;
+    width: 100%;
+    max-width: var(--banner-max-width);
+    border-radius: var(--banner-radius);
+    overflow: hidden;
+    box-shadow: 0 14px 36px color-mix(in srgb, var(--color-foreground) 8%, transparent);
+    transition: transform 180ms ease, box-shadow 180ms ease;
+  }
+  .home-banner__link:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 18px 44px color-mix(in srgb, var(--color-foreground) 12%, transparent);
+  }
+  .home-banner__image {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  @media (max-width: 750px) {
+    .home-banner {
+      padding: clamp(0.5rem, 4vw, 1rem) var(--page-margin);
+    }
+    .home-banner__link {
+      border-radius: clamp(10px, 4vw, var(--banner-radius));
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Home banner",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Banner image"
+    },
+    {
+      "type": "text",
+      "id": "alt_text",
+      "label": "Alt text"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link (optional)"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width",
+      "min": 600,
+      "max": 2000,
+      "step": 20,
+      "unit": "px",
+      "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "radius",
+      "label": "Corner radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "label": "Vertical padding",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    }
+  ],
+  "presets": [
+    {
+      "name": "Home banner"
+    }
+  ]
+}
+{% endschema %}
+
